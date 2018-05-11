@@ -8,7 +8,7 @@
             "homepage": "http://ludovic.chabant.com"
         },
         {
-			"name" "Mike Würfel",
+			"name": "Mike Würfel",
 			"homepage": "https://hambacherforst.org"
 		}
     ],
@@ -26,28 +26,6 @@
                     "classmap": [ "geshi.php" ]
                 }
             }
-        },
-        {
-            "type": "package",
-            "package": {
-                "name": "smartypants/smartypants",
-                "version": "1.5.1",
-                "dist": {
-                    "url": "https://github.com/michelf/php-smartypants/archive/v1.5.1f.zip",
-                    "type": "zip"
-                }
-            }
-        },
-        {
-            "type": "package",
-            "package": {
-                "name": "smartypants/smartypants-typographer",
-                "version": "1.0.1",
-                "dist": {
-                    "url": "https://github.com/michelf/php-smartypants/archive/t1.0.1.zip",
-                    "type": "zip"
-                }
-            }
         }
     ],
     "require": {
@@ -58,8 +36,7 @@
         "geshi/geshi": "1.0.*",
         "leafo/lessphp": "0.3.*",
         "michelf/php-markdown": "1.3",
-        "smartypants/smartypants": "1.5.1",
-        "smartypants/smartypants-typographer": "1.0.1",
+        "michelf/php-smartypants": "1.8.1",
         "netcarver/textile": "v3.5.1",
         "bolt80/stupidhttp": "v0.2.0",
         "mikey179/vfsStream": "v1.1.0"

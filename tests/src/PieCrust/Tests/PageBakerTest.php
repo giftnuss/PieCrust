@@ -255,7 +255,7 @@ class PageBakerTest extends PieCrustTestCase
 EOD
             )
             ->withPost('slug1', 23, 8, 2011, array('title' => 'ONE'), '')
-            ->withPost('slug2', 08, 9, 2011, array('title' => 'TWO'), '')
+            ->withPost('slug2', 8, 9, 2011, array('title' => 'TWO'), '')
             ->withPost('slug3', 10, 9, 2011, array('title' => 'THREE'), '')
             ->withPost('slug4', 18, 9, 2011, array('title' => 'FOUR'), '');
 
@@ -314,7 +314,7 @@ EOD
 EOD
             )
             ->withPost('slug1', 23, 8, 2011, array('title' => 'ONE'), '')
-            ->withPost('slug2', 08, 9, 2011, array('title' => 'TWO'), '')
+            ->withPost('slug2', 8, 9, 2011, array('title' => 'TWO'), '')
             ->withPost('slug3', 10, 9, 2011, array('title' => 'THREE'), '')
             ->withPost('slug4', 18, 9, 2011, array('title' => 'FOUR'), '')
             ->withPost('slug5', 22, 9, 2011, array('title' => 'FIVE'), '')

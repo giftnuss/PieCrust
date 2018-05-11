@@ -3,6 +3,7 @@
 namespace PieCrust\Formatters;
 
 use PieCrust\IPieCrust;
+use Michelf\SmartyPants;
 
 
 class SmartyPantsFormatter implements IFormatter
@@ -48,8 +49,8 @@ class SmartyPantsFormatter implements IFormatter
     
     public function format($text)
     {
-        require_once ('smartypants/' . $this->smartypantsLibDir . '/smartypants.php');
-        return SmartyPants($text);
+		$sp = new SmartyPants();
+		return $sp->format($text);
     }
 }
 

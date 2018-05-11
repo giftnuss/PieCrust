@@ -254,9 +254,10 @@ class JekyllImporter extends ImporterBase
         $it = new \FilesystemIterator($this->rootDir . $dir);
         foreach ($it as $path)
         {
-            if (substr($path->getFilename(), 0, 1) == '.')
+            if (substr($path->getFilename(), 0, 1) == '.') {
                 continue;
-
+            }
+            
             $relative = $dir . DIRECTORY_SEPARATOR . $path->getFilename();
             $relative = ltrim($relative, '/\\');
 
@@ -293,7 +294,7 @@ class JekyllImporter extends ImporterBase
         if ($beginning === false)
         {
             $this->logger->err("Can't read: {$absolute}");
-            continue;
+            return;
         }
         if ($beginning === '---')
         {
