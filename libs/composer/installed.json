@@ -213,6 +213,58 @@
         ]
     },
     {
+        "name": "michelf/php-smartypants",
+        "version": "1.8.1",
+        "version_normalized": "1.8.1.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/michelf/php-smartypants.git",
+            "reference": "47d17c90a4dfd0ccf1f87e25c65e6c8012415aad"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/michelf/php-smartypants/zipball/47d17c90a4dfd0ccf1f87e25c65e6c8012415aad",
+            "reference": "47d17c90a4dfd0ccf1f87e25c65e6c8012415aad",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.0"
+        },
+        "time": "2016-12-13T01:01:17+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Michelf": ""
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause"
+        ],
+        "authors": [
+            {
+                "name": "Michel Fortin",
+                "email": "michel.fortin@michelf.ca",
+                "homepage": "https://michelf.ca/",
+                "role": "Developer"
+            },
+            {
+                "name": "John Gruber",
+                "homepage": "https://daringfireball.net/"
+            }
+        ],
+        "description": "PHP SmartyPants",
+        "homepage": "https://michelf.ca/projects/php-smartypants/",
+        "keywords": [
+            "dashes",
+            "quotes",
+            "spaces",
+            "typographer",
+            "typography"
+        ]
+    },
+    {
         "name": "mikey179/vfsStream",
         "version": "v1.1.0",
         "version_normalized": "1.1.0.0",
@@ -1534,32 +1586,6 @@
         ],
         "description": "Library that helps with managing the version number of Git-hosted PHP projects",
         "homepage": "https://github.com/sebastianbergmann/version"
-    },
-    {
-        "name": "smartypants/smartypants",
-        "version": "1.5.1",
-        "version_normalized": "1.5.1.0",
-        "dist": {
-            "type": "zip",
-            "url": "https://github.com/michelf/php-smartypants/archive/v1.5.1f.zip",
-            "reference": null,
-            "shasum": null
-        },
-        "type": "library",
-        "installation-source": "dist"
-    },
-    {
-        "name": "smartypants/smartypants-typographer",
-        "version": "1.0.1",
-        "version_normalized": "1.0.1.0",
-        "dist": {
-            "type": "zip",
-            "url": "https://github.com/michelf/php-smartypants/archive/t1.0.1.zip",
-            "reference": null,
-            "shasum": null
-        },
-        "type": "library",
-        "installation-source": "dist"
     },
     {
         "name": "symfony/yaml",

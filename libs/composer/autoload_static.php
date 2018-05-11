@@ -101,6 +101,7 @@ class ComposerStaticInitb41ea7b40610b2298c54e27c9ced7c79
             'Michelf' => 
             array (
                 0 => __DIR__ . '/..' . '/michelf/php-markdown',
+                1 => __DIR__ . '/..' . '/michelf/php-smartypants',
             ),
         ),
         'L' => 

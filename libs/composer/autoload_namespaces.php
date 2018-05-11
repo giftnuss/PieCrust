@@ -14,7 +14,7 @@ return array(
     'PieCrust' => array($baseDir . '/src', $baseDir . '/tests/src'),
     'Netcarver\\Textile' => array($vendorDir . '/netcarver/textile/src'),
     'Mustache' => array($vendorDir . '/mustache/mustache/src'),
-    'Michelf' => array($vendorDir . '/michelf/php-markdown'),
+    'Michelf' => array($vendorDir . '/michelf/php-markdown', $vendorDir . '/michelf/php-smartypants'),
     'Log' => array($vendorDir . '/pear'),
     'Console' => array($vendorDir . '/pear'),
     'Benchmark_' => array($vendorDir . '/pear'),
