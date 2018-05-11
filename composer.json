@@ -6,7 +6,11 @@
         {
             "name": "Ludovic Chabant",
             "homepage": "http://ludovic.chabant.com"
-        }
+        },
+        {
+			"name" "Mike Würfel",
+			"homepage": "https://hambacherforst.org"
+		}
     ],
     "repositories": [
         {
@@ -60,6 +64,9 @@
         "bolt80/stupidhttp": "v0.2.0",
         "mikey179/vfsStream": "v1.1.0"
     },
+    "require-dev": {
+		"phpunit/phpunit": "v5.6.8"
+	},
     "autoload": {
         "psr-0": {
             "PieCrust": [ "src/", "tests/src/" ],
