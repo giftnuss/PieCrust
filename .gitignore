@@ -28,6 +28,8 @@ libs/*/*/examples/
 libs/*/*/test/
 libs/*/*/tests/
 libs/*/*/phpunit*
+libs/phpunit/
+libs/bin/phpunit
 
 # Very specific stuff we don't need.
 libs/mikey179/vfsStream/src/test
@@ -35,3 +37,4 @@ libs/symfony/yaml/Symfony/Component/Yaml/Tests
 
 # 
 composer.lock
+phpunit.xml
