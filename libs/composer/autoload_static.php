@@ -7,6 +7,7 @@ namespace Composer\Autoload;
 class ComposerStaticInitb41ea7b40610b2298c54e27c9ced7c79
 {
     public static $files = array (
+        '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
         '6124b4c8570aa390c21fafd04a26c69f' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/deep_copy.php',
     );
 
@@ -18,6 +19,11 @@ class ComposerStaticInitb41ea7b40610b2298c54e27c9ced7c79
         'W' => 
         array (
             'Webmozart\\Assert\\' => 17,
+        ),
+        'S' => 
+        array (
+            'Symfony\\Polyfill\\Ctype\\' => 23,
+            'Symfony\\Component\\Yaml\\' => 23,
         ),
         'D' => 
         array (
@@ -36,6 +42,14 @@ class ComposerStaticInitb41ea7b40610b2298c54e27c9ced7c79
         'Webmozart\\Assert\\' => 
         array (
             0 => __DIR__ . '/..' . '/webmozart/assert/src',
+        ),
+        'Symfony\\Polyfill\\Ctype\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/polyfill-ctype',
+        ),
+        'Symfony\\Component\\Yaml\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/yaml',
         ),
         'Doctrine\\Instantiator\\' => 
         array (
@@ -64,10 +78,6 @@ class ComposerStaticInitb41ea7b40610b2298c54e27c9ced7c79
         ),
         'S' => 
         array (
-            'Symfony\\Component\\Yaml\\' => 
-            array (
-                0 => __DIR__ . '/..' . '/symfony/yaml',
-            ),
             'StupidHttp_' => 
             array (
                 0 => __DIR__ . '/..' . '/bolt80/stupidhttp/lib',
