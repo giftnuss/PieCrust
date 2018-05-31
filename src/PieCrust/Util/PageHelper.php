@@ -57,7 +57,7 @@ class PageHelper
         }
         if (!$basePath)
             throw new PieCrustException("Can't get a relative page path if no pages or posts directory exsists in the website.");
-        
+
         $relativePath = substr($page->getPath(), strlen($basePath));
         if ($stripExtension)
             $relativePath = preg_replace('/\.[a-zA-Z0-9]+$/', '', $relativePath);
@@ -85,18 +85,20 @@ class PageHelper
             return $page->getConfig()->getValueUnchecked($key);
         return $page->getApp()->getConfig()->getValueUnchecked($appSection.'/'.$key);
     }
-    
+
     /**
      * Gets a timestamp/date from a post info array.
      */
     public static function getPostDate($postInfo)
     {
-        $date = new \DateTime();
+        return mktime(0, 0, 0, $postInfo->monthValue, $postInfo->dayValue, $postInfo->yearValue);
+
+        $date = new \DateTime();echo get_class($postInfo);
         $date->setTimestamp(filemtime($postInfo->path));
         $date->setTime(0,0,0);
         return $date->getTimestamp();
     }
-    
+
     /**
      * Gets whether the given page is a regular page.
      */
@@ -104,7 +106,7 @@ class PageHelper
     {
         return $page->getPageType() == IPage::TYPE_REGULAR;
     }
-    
+
     /**
      * Gets whether the given page is a blog post.
      */
@@ -112,7 +114,7 @@ class PageHelper
     {
         return $page->getPageType() == IPage::TYPE_POST;
     }
-    
+
     /**
      * Gets whether the given page is a tag listing.
      */
@@ -120,7 +122,7 @@ class PageHelper
     {
         return $page->getPageType() == IPage::TYPE_TAG;
     }
-    
+
     /**
      * Gets whether the given page is a category listing.
      */

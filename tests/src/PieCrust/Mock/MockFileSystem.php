@@ -122,8 +122,12 @@ class MockFileSystem
     {
         // Ensure the path exists.
         $path = $this->url($path);
-        if (!is_dir(dirname($path)))
-            mkdir(dirname($path), 0777, true);
+        if (!is_dir(dirname($path))) {
+            if(FALSE === mkdir(dirname($path), 0777, true)) {
+				throw new \Exception("Ups, can not create path " . dirname($path));
+			}
+		}
+		// echo $path,"\n",$contents;
 
         // Create the file.
         file_put_contents($path, $contents);

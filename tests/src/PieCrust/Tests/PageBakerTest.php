@@ -135,7 +135,7 @@ class PageBakerTest extends PieCrustTestCase
     public function testPageBake($prettyUrls, $name, $extraPageConfig, $expectedName)
     {
         $pageConfig = array(
-            'layout' => 'none', 
+            'layout' => 'none',
             'format' => 'none'
         );
         if ($extraPageConfig)
@@ -154,19 +154,19 @@ class PageBakerTest extends PieCrustTestCase
 
         $app = new PieCrust(array('root' => $fs->url('kitchen')));
         $page = Page::createFromUri($app, '/' . $name, false);
-        
+
         $baker = new PageBaker($app, $fs->url('counter'));
         $baker->bake($page);
 
         $this->assertFalse($baker->wasPaginationDataAccessed());
         $this->assertEquals(1, $baker->getPageCount());
         $this->assertEquals(
-            array($fs->url('counter/' . $expectedName)), 
+            array($fs->url('counter/' . $expectedName)),
             $baker->getBakedFiles()
         );
         $this->assertFileExists($fs->url('counter/' . $expectedName));
         $this->assertEquals(
-            "Some contents.", 
+            "Some contents.",
             file_get_contents($fs->url('counter/' . $expectedName))
         );
     }
@@ -206,13 +206,13 @@ class PageBakerTest extends PieCrustTestCase
             );
         $app = $fs->getApp();
         $page = Page::createFromUri($app, $uri, false);
-        
+
         $baker = new PageBaker($app, $fs->url('counter'));
         $baker->bake($page);
 
         $this->assertEquals(1, $baker->getPageCount());
         $this->assertEquals(
-            array($fs->url('counter/' . $expectedName)), 
+            array($fs->url('counter/' . $expectedName)),
             $baker->getBakedFiles()
         );
         $this->assertFileExists($fs->url('counter/' . $expectedName));
@@ -264,19 +264,19 @@ EOD
             'cache' => false
         ));
         $page = Page::createFromUri($app, '/' . $name, false);
-        
+
         $baker = new PageBaker($app, $fs->url('counter'));
         $baker->bake($page);
 
         $this->assertTrue($baker->wasPaginationDataAccessed());
         $this->assertEquals(1, $baker->getPageCount());
         $this->assertEquals(
-            array($fs->url('counter/' . $expectedName)), 
+            array($fs->url('counter/' . $expectedName)),
             $baker->getBakedFiles()
         );
         $this->assertFileExists($fs->url('counter/' . $expectedName));
         $this->assertEquals(
-            "FOUR\nTHREE\nTWO\nONE\n", 
+            "FOUR\nTHREE\nTWO\nONE\n",
             file_get_contents($fs->url('counter/' . $expectedName))
         );
     }
@@ -326,7 +326,7 @@ EOD
             'cache' => false
         ));
         $page = Page::createFromUri($app, '/' . $name, false);
-        
+
         $baker = new PageBaker($app, $fs->url('counter'));
         $baker->bake($page);
 
@@ -336,17 +336,17 @@ EOD
             array(
                 $fs->url('counter/' . $expectedName1),
                 $fs->url('counter/' . $expectedName2)
-            ), 
+            ),
             $baker->getBakedFiles()
         );
         $this->assertFileExists($fs->url('counter/' . $expectedName1));
         $this->assertFileExists($fs->url('counter/' . $expectedName2));
         $this->assertEquals(
-            "SEVEN\nSIX\nFIVE\nFOUR\nTHREE\n", 
+            "SEVEN\nSIX\nFIVE\nFOUR\nTHREE\n",
             file_get_contents($fs->url('counter/' . $expectedName1))
         );
         $this->assertEquals(
-            "TWO\nONE\n", 
+            "TWO\nONE\n",
             file_get_contents($fs->url('counter/' . $expectedName2))
         );
     }
@@ -386,14 +386,14 @@ EOD
 
         $app = new PieCrust(array('root' => $fs->url('kitchen')));
         $page = Page::createFromUri($app, '/' . $name, false);
-        
+
         $baker = new PageBaker($app, $fs->url('counter'), null, array('copy_assets' => true));
         $baker->bake($page);
 
         $this->assertFalse($baker->wasPaginationDataAccessed());
         $this->assertEquals(1, $baker->getPageCount());
         $this->assertEquals(
-            array($fs->url('counter/' . $expectedName)), 
+            array($fs->url('counter/' . $expectedName)),
             $baker->getBakedFiles()
         );
         $this->assertFileExists($fs->url('counter/' . $expectedName));
