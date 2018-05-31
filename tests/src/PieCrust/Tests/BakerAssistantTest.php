@@ -51,7 +51,6 @@ class BakerAssistantTest extends PieCrustTestCase
         $app->pluginLoader->bakerAssistants = array($testAssistant);
 
         $baker = new PieCrustBaker($app);
-        sleep(1);
         $baker->bake();
 
         $this->assertTrue(is_file($fs->url('kitchen/_counter/foo.html')));
@@ -62,7 +61,6 @@ class BakerAssistantTest extends PieCrustTestCase
         $testAssistant->pagesBaked = 0;
         $testAssistant->pagesSkipped = 0;
         clearstatcache();
-        sleep(1);
         $baker->bake();
 
         $this->assertEquals(0, $testAssistant->pagesBaked);
