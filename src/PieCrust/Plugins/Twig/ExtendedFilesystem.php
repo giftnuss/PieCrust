@@ -2,15 +2,19 @@
 
 namespace PieCrust\Plugins\Twig;
 
+use
+  Twig\Loader\FilesystemLoader,
+  Twig\Loader\LoaderInterface,
+  Twig\Source;
 
 /**
  * A Twig file system that can also format an in-memory string.
  */
-class ExtendedFilesystem extends \Twig_Loader_Filesystem implements \Twig_LoaderInterface
+class ExtendedFilesystem extends FilesystemLoader implements LoaderInterface
 {
     protected $useTimeInCacheKey;
     protected $templateStrings;
-    
+
     public function __construct($paths, $useTimeInCacheKey = false)
     {
         parent::__construct($paths);
@@ -22,14 +26,15 @@ class ExtendedFilesystem extends \Twig_Loader_Filesystem implements \Twig_Loader
     {
         $this->templateStrings[$name] = $source;
     }
-    
-    public function getSource($name)
+
+    public function getSourceContext($name)
     {
-        if (isset($this->templateStrings[$name]))
-            return $this->templateStrings[$name];
-        return parent::getSource($name);
+        if (isset($this->templateStrings[$name])) {
+            return new Source($this->templateStrings[$name], $name, null);
+        }
+        return parent::getSourceContext($name);
     }
-    
+
     public function getCacheKey($name)
     {
         if (isset($this->templateStrings[$name]))
@@ -46,7 +51,7 @@ class ExtendedFilesystem extends \Twig_Loader_Filesystem implements \Twig_Loader
         }
         return $cacheKey;
     }
-    
+
     public function isFresh($name, $time)
     {
         if (isset($this->templateStrings[$name]))
