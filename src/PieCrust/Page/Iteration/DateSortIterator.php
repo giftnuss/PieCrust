@@ -38,7 +38,7 @@ class DateSortIterator extends BaseIterator implements \OuterIterator
     {
         $timestamp1 = $post1->getDate(false);
         $timestamp2 = $post2->getDate(false);
-print_r(array($timestamp1,$timestamp2));
+
         // If both timestamps fall on the same day, we have to differentiate
         // them with the time.
         if (date('Ymd', $timestamp1) == date('Ymd', $timestamp2))
