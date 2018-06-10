@@ -72,7 +72,7 @@ class ComposerStaticInitb41ea7b40610b2298c54e27c9ced7c79
     public static $prefixesPsr0 = array (
         'o' => 
         array (
-            'org\\bovigo\\vfs' => 
+            'org\\bovigo\\vfs\\' => 
             array (
                 0 => __DIR__ . '/..' . '/mikey179/vfsStream/src/main/php',
             ),
