@@ -27,7 +27,7 @@ class PieCrust implements IPieCrust
     {
         return $this->rootDir;
     }
-    
+
     protected $cachingEnabled;
     /**
      * Gets whether caching is enabled.
@@ -36,7 +36,7 @@ class PieCrust implements IPieCrust
     {
         return $this->cachingEnabled;
     }
-    
+
     protected $debuggingEnabled;
     /**
      * Gets whether debugging is enabled.
@@ -54,7 +54,7 @@ class PieCrust implements IPieCrust
     {
         return $this->themeSite;
     }
-    
+
     protected $templatesDirs;
     /**
      * Gets the directories that contain templates and layouts ('/_content/templates' by default).
@@ -65,7 +65,7 @@ class PieCrust implements IPieCrust
         {
             // Start with no template directories.
             $this->templatesDirs = array();
-            
+
             // Add the custom template directories specified in the configuration.
             $additionalPaths = $this->getConfig()->getValue('site/templates_dirs');
             if ($additionalPaths)
@@ -88,7 +88,7 @@ class PieCrust implements IPieCrust
         }
         return $this->templatesDirs;
     }
-    
+
     /**
      * Sets the directories that contain templates and layouts. Directories can be
      * relative to the site's root directory.
@@ -98,15 +98,15 @@ class PieCrust implements IPieCrust
         $this->templatesDirs = array();
         $this->addTemplatesDir($dir);
     }
-    
+
     /**
      * Adds a templates directory. It can be relative to the site's root directory.
      */
     public function addTemplatesDir($dir)
     {
         $this->getTemplatesDirs();  // Ensure defaults are created.
-        
-        if (!is_array($dir)) 
+
+        if (!is_array($dir))
             $dir = array($dir);
 
         foreach ($dir as $d)
@@ -119,7 +119,7 @@ class PieCrust implements IPieCrust
             $this->templatesDirs[] = rtrim($absolute, '/\\') . '/';
         }
     }
-    
+
     protected $pagesDir;
     /**
      * Gets the directory that contains the pages and their assets ('/_content/pages' by default).
@@ -134,7 +134,7 @@ class PieCrust implements IPieCrust
         }
         return $this->pagesDir;
     }
-    
+
     /**
      * Sets the directory that contains the pages and their assets.
      */
@@ -146,7 +146,7 @@ class PieCrust implements IPieCrust
             throw new PieCrustException("The specified pages directory doesn't exist: " . $this->pagesDir);
         }
     }
-    
+
     protected $postsDir;
     /**
      * Gets the directory that contains the posts and their assets ('/_content/posts' by default).
@@ -161,7 +161,7 @@ class PieCrust implements IPieCrust
         }
         return $this->postsDir;
     }
-    
+
     /**
      * Sets the directory that contains the posts and their assets.
      */
@@ -197,7 +197,7 @@ class PieCrust implements IPieCrust
         }
         return $this->pluginsDirs;
     }
-    
+
     /**
      * Sets the directories that contain the user plugins.
      */
@@ -213,8 +213,8 @@ class PieCrust implements IPieCrust
     public function addPluginsDir($dir)
     {
         $this->getPluginsDirs();  // Ensure defaults are created.
-        
-        if (!is_array($dir)) 
+
+        if (!is_array($dir))
             $dir = array($dir);
 
         foreach ($dir as $d)
@@ -270,7 +270,7 @@ class PieCrust implements IPieCrust
         }
         return $this->cacheDir;
     }
-    
+
     /**
      * Sets the cache directory ('/_cache' by default).
      */
@@ -296,7 +296,7 @@ class PieCrust implements IPieCrust
             }
         }
     }
-    
+
     protected $pluginLoader;
     /**
      * Gets the plugin loader for this app.
@@ -324,7 +324,7 @@ class PieCrust implements IPieCrust
     {
         return $this->environment;
     }
-    
+
     /**
      * Creates a new PieCrust instance with the given base URL.
      */
@@ -341,8 +341,9 @@ class PieCrust implements IPieCrust
             $parameters
         );
 
-        if (!$parameters['root'])
+        if (!$parameters['root']) {
             throw new PieCrustException("No root directory was specified.");
+        }
 
         $this->rootDir = rtrim($parameters['root'], '/\\') . '/';
         $this->debuggingEnabled = (bool)$parameters['debug'];
@@ -351,11 +352,12 @@ class PieCrust implements IPieCrust
         $this->pluginLoader = new PluginLoader($this);
 
         $this->environment = $parameters['environment'];
-        if (!$this->environment)
+        if (!$this->environment) {
             $this->environment = new CachedEnvironment();
+        }
         $this->environment->initialize($this);
     }
-    
+
     /**
      * Ensures the configuration has been loaded.
      */

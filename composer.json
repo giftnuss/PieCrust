@@ -38,11 +38,11 @@
         "michelf/php-markdown": "1.3",
         "michelf/php-smartypants": "1.8.1",
         "netcarver/textile": "v3.5.1",
-        "bolt80/stupidhttp": "v0.2.0",
-        "mikey179/vfsStream": "v1.1.0"
+        "bolt80/stupidhttp": "v0.2.0"
     },
     "require-dev": {
-		"phpunit/phpunit": "v5.6.8"
+		"phpunit/phpunit": "v5.6.8",
+        "mikey179/vfsStream": "v1.6.5"
 	},
     "autoload": {
         "psr-0": {

@@ -8,6 +8,7 @@ use PieCrust\PieCrustException;
 use PieCrust\Plugins\Twig\ExtendedFilesystem;
 use PieCrust\Plugins\Twig\GeshiExtension;
 use PieCrust\Plugins\Twig\PieCrustExtension;
+use PieCrust\TemplateEngines\Twig\FilesystemCache;
 
 
 class TwigTemplateEngine implements ITemplateEngine
@@ -15,21 +16,21 @@ class TwigTemplateEngine implements ITemplateEngine
     protected $pieCrust;
     protected $twigEnv;
     protected $twigLoader;
-    
+
     public function initialize(IPieCrust $pieCrust)
     {
         $this->pieCrust = $pieCrust;
     }
-    
+
     public function getExtension()
     {
         return 'twig';
     }
-    
+
     public function renderString($content, $data)
     {
         $this->ensureLoaded();
-        
+
         // Some of our extensions require access to the current PieCrust app.
         $data['PIECRUST_APP'] = $this->pieCrust;
         // Temporarily disable caching in Twig to prevent the _cache folder from
@@ -53,7 +54,7 @@ class TwigTemplateEngine implements ITemplateEngine
         unset($data['PIECRUST_APP']);
         $this->twigEnv->setCache($cache);
     }
-    
+
     public function renderFile($templateNames, $data)
     {
         $this->ensureLoaded();
@@ -79,13 +80,13 @@ class TwigTemplateEngine implements ITemplateEngine
         {
             throw new PieCrustException(implode(', ', $errors));
         }
-        
+
         // Some of our extensions require access to the current PieCrust app.
         $data['PIECRUST_APP'] = $this->pieCrust;
         $tpl->display($data);
         unset($data['PIECRUST_APP']);
     }
-    
+
     public function clearInternalCache()
     {
         if ($this->twigEnv != null)
@@ -93,14 +94,14 @@ class TwigTemplateEngine implements ITemplateEngine
             $this->twigEnv->clearTemplateCache();
         }
     }
-    
+
     protected function ensureLoaded()
     {
         if ($this->twigEnv === null or $this->twigLoader === null)
         {
             $isHosted = ($this->pieCrust->getConfig()->getValue('server/is_hosting') === true);
             $isBaking = ($this->pieCrust->getConfig()->getValue('baker/is_baking') === true);
-            
+
             $dirs = $this->pieCrust->getTemplatesDirs();
             // If we're in a long running process (hosted), the templates
             // will be defined in memory and when the file changes, Twig
@@ -108,21 +109,23 @@ class TwigTemplateEngine implements ITemplateEngine
             // name is the same, so we add the time-stamp in the cache key.
             // We tell the file-system to do this by passing `true` as the
             // second constructor parameter.
-            $this->twigLoader = new ExtendedFilesystem($dirs, $isHosted); 
-            
+            $this->twigLoader = new ExtendedFilesystem($dirs, $isHosted);
+
             $options = array('cache' => false, 'debug' => false);
             if ($this->pieCrust->isCachingEnabled())
             {
-                $options['cache'] = $this->pieCrust->getCacheDir() . 'templates_c';
+                $cachedir = $this->pieCrust->getCacheDir() . 'templates_c';
+                $cache = new FilesystemCache($cachedir);
+                $options['cache'] = $cache;
             }
             if ($this->pieCrust->isDebuggingEnabled() or
                 $this->pieCrust->getConfig()->getValue('twig/debug') === true)
             {
                 $options['debug'] = true;
             }
-            if ($isHosted or 
+            if ($isHosted or
                 (
-                    $this->pieCrust->getConfig()->getValue('twig/auto_reload') !== false and 
+                    $this->pieCrust->getConfig()->getValue('twig/auto_reload') !== false and
                     !$isBaking
                 ))
             {
