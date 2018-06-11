@@ -46,11 +46,7 @@ class PieCrustBaker implements IBaker
      */
     public function getPageBaker()
     {
-        if ($this->pageBaker === null)
-        {
-            if($this->bakeRecord === null) {
-                $this->bakeRecord = new TransitionalBakeRecord($this->pieCrust);
-            }
+        if ($this->pageBaker === null) {
             $parameters = array(
                 'smart' => $this->parameters['__smart_content'],
                 'copy_assets' => $this->parameters['copy_assets']
@@ -183,6 +179,7 @@ class PieCrustBaker implements IBaker
 
         // Load the baking assistants.
         $this->cacheAssistants();
+        $this->bakeRecord = new TransitionalBakeRecord($this->pieCrust);
     }
 
     /**
