@@ -10,7 +10,7 @@ class SmartyPantsFormatter implements IFormatter
 {
     protected $enabled;
     protected $smartypantsLibDir;
-    
+
     public function initialize(IPieCrust $pieCrust)
     {
         $this->smartypantsLibDir = 'smartypants';
@@ -31,7 +31,7 @@ class SmartyPantsFormatter implements IFormatter
             $this->enabled = false;
         }
     }
-    
+
     public function getPriority()
     {
         return IFormatter::PRIORITY_LOW;
@@ -41,16 +41,16 @@ class SmartyPantsFormatter implements IFormatter
     {
         return false;
     }
-    
+
     public function supportsFormat($format)
     {
         return $format != 'none' and $this->enabled;
     }
-    
+
     public function format($text)
     {
 		$sp = new SmartyPants();
-		return $sp->format($text);
+		return $sp->transform($text);
     }
 }
 

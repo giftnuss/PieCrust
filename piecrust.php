@@ -18,8 +18,9 @@ function piecrust_show_system_message($message, $details = null)
  */
 function piecrust_error_handler($errno, $errstr, $errfile = null, $errline = 0, $errcontext = null)
 {
-    if (error_reporting() & $errno)
-        throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
+    if (error_reporting() & $errno) {
+       // throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
+    }
     return;
 }
 
@@ -27,7 +28,7 @@ function piecrust_error_handler($errno, $errstr, $errfile = null, $errline = 0, 
  * The PieCrust shutdown function.
  */
 function piecrust_shutdown_function()
-{ 
+{
     $error = error_get_last();
     if ($error)
     {
@@ -40,7 +41,7 @@ function piecrust_shutdown_function()
         catch (Exception $e)
         {
         }
-        
+
         piecrust_show_system_message('critical', "{$error['message']} in '{$error['file']}:{$error['line']}'");
         exit();
     }
@@ -81,7 +82,7 @@ function piecrust_setup($profile = 'web')
     $srcDir = __DIR__ . '/src';
     $libsDir = __DIR__ . '/libs';
     set_include_path(
-        get_include_path() . PATH_SEPARATOR . 
+        get_include_path() . PATH_SEPARATOR .
         $libsDir . '/pear' . PATH_SEPARATOR .
         $libsDir);
 
@@ -89,7 +90,7 @@ function piecrust_setup($profile = 'web')
     $loader = (require $libsDir . '/autoload.php');
     $loader->add('Console_', $libsDir . '/pear');
     $loader->add('Log_', $libsDir . '/pear');
-    
+
     // Set error handling.
     switch ($profile)
     {
@@ -140,7 +141,7 @@ function piecrust_run($parameters = array(), $uri = null, $profile = 'web')
 function piecrust_chef($userArgc = null, $userArgv = null, $profile = 'chef')
 {
     piecrust_setup($profile);
-    
+
     $chef = new PieCrust\Chef\Chef();
     return $chef->run($userArgc, $userArgv);
 }

@@ -10,6 +10,8 @@ if (!defined('PHP_VERSION_ID') or PHP_VERSION_ID < 50300)
     die("You need PHP 5.3+ to use PieCrust.");
 }
 
+error_reporting(E_ALL & ~E_DEPRECATED & ~E_NOTICE & ~E_STRICT);
+
 require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . 'piecrust.php';
 $returnCode = piecrust_chef();
 exit($returnCode);
