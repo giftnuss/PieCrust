@@ -30,7 +30,7 @@ class PieCrustBaker implements IBaker
     protected $bakeRecord;
     protected $logger;
     protected $assistants;
-    
+
     protected $pieCrust;
     /**
      * Get the app hosted in the baker.
@@ -46,8 +46,11 @@ class PieCrustBaker implements IBaker
      */
     public function getPageBaker()
     {
-        if ($this->pageBaker == null)
+        if ($this->pageBaker === null)
         {
+            if($this->bakeRecord === null) {
+                $this->bakeRecord = new TransitionalBakeRecord($this->pieCrust);
+            }
             $parameters = array(
                 'smart' => $this->parameters['__smart_content'],
                 'copy_assets' => $this->parameters['copy_assets']
@@ -61,7 +64,7 @@ class PieCrustBaker implements IBaker
         }
         return $this->pageBaker;
     }
-    
+
     protected $parameters;
     /**
      * Gets the baking parameters.
@@ -70,7 +73,7 @@ class PieCrustBaker implements IBaker
     {
         return $this->parameters;
     }
-    
+
     /**
      * Get a baking parameter's value.
      */
@@ -78,7 +81,7 @@ class PieCrustBaker implements IBaker
     {
         return $this->parameters[$key];
     }
-    
+
     /**
      * Sets a baking parameter's value.
      */
@@ -86,7 +89,7 @@ class PieCrustBaker implements IBaker
     {
         $this->parameters[$key] = $value;
     }
-    
+
     protected $bakeDir;
     /**
      * Gets the bake (output) directory.
@@ -100,7 +103,7 @@ class PieCrustBaker implements IBaker
         }
         return $this->bakeDir;
     }
-    
+
     /**
      * Sets the bake (output) directory.
      */
@@ -118,7 +121,7 @@ class PieCrustBaker implements IBaker
             throw new PieCrustException('The bake directory must exist and be writable, and we can\'t create it or change the permissions ourselves: ' . $this->bakeDir, 0, $e);
         }
     }
-    
+
     /**
      * Creates a new instance of the PieCrustBaker.
      */
@@ -128,8 +131,9 @@ class PieCrustBaker implements IBaker
         $this->pieCrust->getConfig()->setValue('baker/is_baking', false);
 
         $bakerParametersFromApp = $this->pieCrust->getConfig()->getValue('baker');
-        if ($bakerParametersFromApp == null)
+        if ($bakerParametersFromApp == null) {
             $bakerParametersFromApp = array();
+        }
 
         $this->parameters = array_merge(array(
                 'smart' => true,
@@ -141,7 +145,8 @@ class PieCrustBaker implements IBaker
                 'mounts' => array(),
                 'skip_patterns' => array(),
                 'force_patterns' => array(),
-                'output' => false
+                'output' => false,
+                '__smart_content' => null
             ),
             $bakerParametersFromApp,
             $bakerParameters
@@ -179,7 +184,7 @@ class PieCrustBaker implements IBaker
         // Load the baking assistants.
         $this->cacheAssistants();
     }
-    
+
     /**
      * Bakes the website.
      */
@@ -189,19 +194,18 @@ class PieCrustBaker implements IBaker
 
         // Pre-bake notification.
         $this->callAssistants('onBakeStart', array($this));
-        
+
         // Display debug information.
         $this->logger->debug("  Bake Output: " . $this->getBakeDir());
         $this->logger->debug("  Root URL: " . $this->pieCrust->getConfig()->getValue('site/root'));
-        
+
         // Setup the PieCrust environment.
         if ($this->parameters['copy_assets'])
             $this->pieCrust->getEnvironment()->getPageRepository()->setAssetUrlBaseRemap('%site_root%%uri%');
         $this->pieCrust->getConfig()->setValue('baker/is_baking', true);
-        
+
         // Create the bake record.
         $bakeRecordPath = false;
-        $this->bakeRecord = new TransitionalBakeRecord($this->pieCrust);
         if ($this->pieCrust->isCachingEnabled())
         {
             $start = microtime(true);
@@ -215,12 +219,12 @@ class PieCrustBaker implements IBaker
 
         // Create the execution context.
         $executionContext = $this->pieCrust->getEnvironment()->getExecutionContext(true);
-        
+
         // Get the cache validity information.
         $cacheInfo = new PieCrustCacheInfo($this->pieCrust);
         $cacheValidity = $cacheInfo->getValidity(false);
         $executionContext->isCacheValid = $cacheValidity['is_valid'];
-        
+
         // Figure out if we need to clean the cache.
         $this->parameters['__smart_content'] = $this->parameters['smart'];
         if ($this->pieCrust->isCachingEnabled())
@@ -243,7 +247,7 @@ class PieCrustBaker implements IBaker
         $this->bakePosts();
         $this->bakePages();
         $this->bakeTaxonomies();
-    
+
         $dirBaker = new DirectoryBaker(
             $this->pieCrust,
             $this->getBakeDir(),
@@ -263,7 +267,7 @@ class PieCrustBaker implements IBaker
 
         // Post-bake notification.
         $this->callAssistants('onBakeEnd', array($this));
-        
+
         // Save the bake record and clean up.
         if ($bakeRecordPath)
         {
@@ -273,9 +277,9 @@ class PieCrustBaker implements IBaker
             $this->logger->debug(self::formatTimed($start, "saved bake record"));
         }
         $this->bakeRecord = null;
-        
+
         $this->pieCrust->getConfig()->setValue('baker/is_baking', false);
-        
+
         $this->logger->info('-------------------------');
         $this->logger->notice(self::formatTimed($overallStart, 'done baking'));
     }
@@ -324,7 +328,7 @@ class PieCrustBaker implements IBaker
             foreach ($this->pieCrust->getTemplatesDirs() as $dir)
             {
                 $iterator = new RecursiveIteratorIterator(
-                    new RecursiveDirectoryIterator($dir), 
+                    new RecursiveDirectoryIterator($dir),
                     RecursiveIteratorIterator::CHILD_FIRST
                 );
                 foreach ($iterator as $path)
@@ -350,7 +354,7 @@ class PieCrustBaker implements IBaker
         }
         return $cleanCache;
     }
-    
+
     protected function bakePages()
     {
         $pages = PageHelper::getPages($this->pieCrust);
@@ -359,7 +363,7 @@ class PieCrustBaker implements IBaker
             $this->bakePage($page);
         }
     }
-    
+
     protected function bakePage(IPage $page)
     {
         $start = microtime(true);
@@ -369,12 +373,12 @@ class PieCrustBaker implements IBaker
         $this->callAssistants('onPageBakeEnd', array($page, new BakeResult($didBake)));
         if (!$didBake)
             return false;
-        
+
         $pageCount = $baker->getPageCount();
         $this->logger->info(self::formatTimed($start, ($page->getUri() == '' ? '[main page]' : $page->getUri()) . (($pageCount > 1) ? " [{$pageCount}]" : "")));
         return true;
     }
-    
+
     protected function bakePosts()
     {
         $blogKeys = $this->pieCrust->getConfig()->getValue('site/blogs');
@@ -564,7 +568,7 @@ class PieCrustBaker implements IBaker
             }
         }
     }
-    
+
     protected function handleDeletions()
     {
         $count = 0;
@@ -629,7 +633,7 @@ class PieCrustBaker implements IBaker
             call_user_func_array(array(&$ass, $method), $args);
         }
     }
-    
+
     public static function formatTimed($startTime, $message)
     {
         static $color = null;
