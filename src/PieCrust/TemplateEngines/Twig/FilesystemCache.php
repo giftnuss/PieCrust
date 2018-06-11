@@ -33,7 +33,7 @@ class Tempfile
     public function getFilename()
     {
         if($this->dir !== null) {
-            return join('/',[$this->dir, $this->name]);
+            return join(DIRECTORY_SEPARATOR, [$this->dir, $this->name]);
         }
         return $this->name;
     }

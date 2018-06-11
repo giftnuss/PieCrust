@@ -20,7 +20,7 @@ class PageBaker
      * Index filename.
      */
     const BAKE_INDEX_DOCUMENT = 'index.html';
-    
+
     protected $pieCrust;
     protected $bakeDir;
     protected $bakeRecord;
@@ -28,7 +28,7 @@ class PageBaker
 
     protected $logger;
     protected $prettyUrls;
-    
+
     protected $paginationDataAccessed;
     /**
      * Gets whether pagination data was accessed during baking.
@@ -37,7 +37,7 @@ class PageBaker
     {
         return $this->paginationDataAccessed;
     }
-    
+
     /**
      * Gets the number of baked pages.
      */
@@ -45,7 +45,7 @@ class PageBaker
     {
         return count($this->bakedFiles);
     }
-    
+
     protected $bakedFiles;
     /**
      * Gets the files that were baked by the last call to `bake()`.
@@ -54,20 +54,21 @@ class PageBaker
     {
         return $this->bakedFiles;
     }
-    
+
     /**
      * Creates a new instance of PageBaker.
      */
     public function __construct(IPieCrust $pieCrust, $bakeDir, $bakeRecord = null, array $parameters = array())
     {
         $this->pieCrust = $pieCrust;
+        $this->bakedFiles = array();
         $this->bakeDir = rtrim(str_replace('\\', '/', $bakeDir), '/') . '/';
         $this->bakeRecord = $bakeRecord;
         $this->parameters = array_merge(
             array(
                 'smart' => true,
                 'copy_assets' => false
-            ), 
+            ),
             $parameters
         );
 
@@ -107,7 +108,7 @@ class PageBaker
             if ($extension)
             {
                 // If the page is a tag/category listing, we don't want to pick
-                // up any extension from the tag/category name itself! (like if 
+                // up any extension from the tag/category name itself! (like if
                 // the tag's name is `blah.php`)
                 if (!PageHelper::isTag($page) && !PageHelper::isCategory($page))
                     $name = substr($name, 0, strlen($name) - strlen($extension) - 1);
@@ -134,7 +135,7 @@ class PageBaker
         }
         return $bakePath;
     }
-    
+
     /**
      * Bakes the given page. Additional template data can be provided, along with
      * a specific set of posts for the pagination data.
@@ -142,17 +143,14 @@ class PageBaker
     public function bake(IPage $page, array $extraData = null)
     {
         $didBake = false;
-        try
-        {
-            $this->bakedFiles = array();
-            $this->paginationDataAccessed = false;
-            $this->logger->debug("Baking '{$page->getUri()}'...");
-            
+        $this->bakedFiles = array();
+        $this->paginationDataAccessed = false;
+        $this->logger->debug("Baking '{$page->getUri()}'...");
+        try {
             $pageRenderer = new PageRenderer($page);
-            
+
             $hasMorePages = true;
-            while ($hasMorePages)
-            {
+            while ($hasMorePages) {
                 $didBakeThisOne = $this->bakeSinglePage($pageRenderer, $extraData);
                 $didBake |= $didBakeThisOne;
                 if (!$didBakeThisOne)
@@ -162,38 +160,35 @@ class PageBaker
                 if ($data and isset($data['pagination']))
                 {
                     $paginator = $data['pagination'];
-                    $hasMorePages = ($paginator->wasPaginationDataAccessed() and 
+                    $hasMorePages = ($paginator->wasPaginationDataAccessed() and
                                      $paginator->hasMorePages());
                     if ($hasMorePages)
                     {
                         $page->setPageNumber($page->getPageNumber() + 1);
-                        // setPageNumber() resets the page's data, so when we 
-                        // enter bakeSinglePage again in the next loop, we have 
+                        // setPageNumber() resets the page's data, so when we
+                        // enter bakeSinglePage again in the next loop, we have
                         // to re-set the extraData and all other stuff.
                     }
                 }
             }
         }
-        catch (Exception $e)
-        {
+        catch (Exception $e) {
             $pageRelativePath = PageHelper::getRelativePath($page);
             throw new PieCrustException("Error baking page '{$pageRelativePath}' (p{$page->getPageNumber()})", 0, $e);
         }
 
         // Record our work.
-        if ($this->bakeRecord)
-        {
+        if ($this->bakeRecord) {
             $this->bakeRecord->addPageEntry($page, $didBake ? $this : null);
         }
-
         return $didBake;
     }
-    
+
     protected function bakeSinglePage(PageRenderer $pageRenderer, array $extraData = null)
     {
         $page = $pageRenderer->getPage();
-        
-        // Set the extra template data before the page's data is computed.        
+
+        // Set the extra template data before the page's data is computed.
         if ($extraData != null)
             $page->setExtraPageData($extraData);
 
@@ -228,7 +223,7 @@ class PageBaker
         // If we're using portable URLs, change the site root to a relative
         // path from the page's directory.
         $savedSiteRoot = $this->setPortableSiteRoot($page->getApp(), $bakePath);
-        
+
         // Render the page.
         $bakedContents = $pageRenderer->get();
 
@@ -236,12 +231,12 @@ class PageBaker
         $data = $page->getPageData();
         $assetor = $data['assets'];
         $paginator = $data['pagination'];
-        
+
         // Copy the page.
         PathHelper::ensureDirectory(dirname($bakePath));
         file_put_contents($bakePath, $bakedContents);
         $this->bakedFiles[] = $bakePath;
-        
+
         // Copy any used assets for the first sub-page.
         if ($page->getPageNumber() == 1 and
             $this->parameters['copy_assets'])
@@ -254,10 +249,10 @@ class PageBaker
             else
             {
                 $bakePathInfo = pathinfo($bakePath);
-                $bakeAssetDir = $bakePathInfo['dirname'] . '/' . 
+                $bakeAssetDir = $bakePathInfo['dirname'] . '/' .
                                 (($page->getUri() == '') ? '' : $bakePathInfo['filename']) . '/';
             }
-            
+
             $assetPaths = $assetor->getAssetPathnames();
             if ($assetPaths != null)
             {
@@ -270,7 +265,7 @@ class PageBaker
                 }
             }
         }
-        
+
         // Remember a few things.
         $this->paginationDataAccessed = ($this->paginationDataAccessed or $paginator->wasPaginationDataAccessed());
 
