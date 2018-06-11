@@ -7,4 +7,12 @@ $baseDir = dirname($vendorDir);
 
 return array(
     $vendorDir . '/pear',
+    $vendorDir . '/pear/archive_tar',
+    $vendorDir . '/pear/console_commandline',
+    $vendorDir . '/pear/console_getopt',
+    $vendorDir . '/pear/log',
+    $vendorDir . '/pear/pear',
+    $vendorDir . '/pear/pear_exception',
+    $vendorDir . '/pear/structures_graph',
+    $vendorDir . '/pear/xml_util',
 );
