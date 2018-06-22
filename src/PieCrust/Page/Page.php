@@ -29,7 +29,7 @@ class Page implements IPage
     {
         return $this->pieCrust;
     }
-    
+
     protected $path;
     /**
      * Gets the file-system path to the page's file.
@@ -38,7 +38,7 @@ class Page implements IPage
     {
         return $this->path;
     }
-    
+
     protected $uri;
     /**
      * Gets the PieCrust URI to the page.
@@ -47,7 +47,7 @@ class Page implements IPage
     {
         return $this->uri;
     }
-    
+
     protected $blogKey;
     /**
      * Gets the blog key for this page.
@@ -56,7 +56,7 @@ class Page implements IPage
     {
         return $this->blogKey;
     }
-    
+
     protected $pageNumber;
     /**
      * Gets the page number (for pages that display a large number of posts).
@@ -65,7 +65,7 @@ class Page implements IPage
     {
         return $this->pageNumber;
     }
-    
+
     /**
      * Sets the page number.
      */
@@ -77,7 +77,7 @@ class Page implements IPage
             $this->unload();
         }
     }
-    
+
     protected $key;
     /**
      * Gets the page key (e.g. the tag or category)
@@ -98,7 +98,7 @@ class Page implements IPage
             $this->unload();
         }
     }
-    
+
     protected $date;
     protected $dateIsLocked;
     /**
@@ -130,7 +130,7 @@ class Page implements IPage
         }
         return $this->date;
     }
-    
+
     /**
      * Sets the date this page was created.
      */
@@ -154,7 +154,7 @@ class Page implements IPage
             }
         }
     }
-    
+
     protected $type;
     /**
      * Gets the page type.
@@ -163,7 +163,7 @@ class Page implements IPage
     {
         return $this->type;
     }
-    
+
     protected $wasCached;
     /**
      * Gets whether this page's contents were cached.
@@ -172,7 +172,7 @@ class Page implements IPage
     {
         return $this->wasCached;
     }
-    
+
     protected $config;
     /**
      * Gets the page's configuration from its YAML header.
@@ -182,7 +182,7 @@ class Page implements IPage
         $this->ensureConfigLoaded();
         return $this->config;
     }
-    
+
     protected $contents;
     protected $formattedContents;
     /**
@@ -193,7 +193,7 @@ class Page implements IPage
         $this->ensureContentsFormatted();
         return $this->formattedContents[$segment];
     }
-    
+
     /**
      * Returns whether a given content segment exists.
      */
@@ -202,7 +202,7 @@ class Page implements IPage
         $this->ensureContentsFormatted();
         return isset($this->formattedContents[$segment]);
     }
-    
+
     /**
      * Gets all the page's formatted content segments.
      */
@@ -211,7 +211,7 @@ class Page implements IPage
         $this->ensureContentsFormatted();
         return $this->formattedContents;
     }
-    
+
     protected $pageData;
     /**
      * Gets the data used for rendering the page.
@@ -224,7 +224,7 @@ class Page implements IPage
         }
         return $this->pageData;
     }
-    
+
     protected $extraData;
     /**
      * Gets the extra data.
@@ -233,7 +233,7 @@ class Page implements IPage
     {
         return $this->extraData;
     }
-    
+
     /**
      * Adds extra data to the page's data for rendering.
      */
@@ -242,7 +242,7 @@ class Page implements IPage
         $this->unload();
         $this->extraData = $data;
     }
-    
+
     protected $assetUrlBaseRemap;
     /**
      * Gets the asset URL base remapping pattern.
@@ -251,7 +251,7 @@ class Page implements IPage
     {
         return $this->assetUrlBaseRemap;
     }
-    
+
     /**
      * Sets the asset URL base remapping pattern.
      */
@@ -259,7 +259,7 @@ class Page implements IPage
     {
         $this->assetUrlBaseRemap = $remap;
     }
- 
+
     protected $paginationDataSource;
     /**
      * Gets the pagination data source.
@@ -300,7 +300,7 @@ class Page implements IPage
     {
         return $this->config != null ||
             $this->contents != null ||
-            $this->pageData != null || 
+            $this->pageData != null ||
             $this->formattedContents != null;
     }
 
@@ -336,7 +336,7 @@ class Page implements IPage
 
         $this->observers = array();
     }
-    
+
     /**
      * Ensures the page has been loaded from disk.
      */
@@ -359,7 +359,7 @@ class Page implements IPage
             }
         }
     }
-    
+
     /**
      * Ensures the page has been formatted completely.
      */
@@ -378,7 +378,7 @@ class Page implements IPage
             }
         }
     }
-    
+
     /**
      * Creates a new Page instance given a fully qualified URI.
      */
@@ -386,7 +386,7 @@ class Page implements IPage
     {
         if ($uri == null)
             throw new InvalidArgumentException("The given URI is null.");
-        
+
         $uriInfo = UriParser::parseUri($pieCrust, $uri);
         if ($uriInfo == null or
             (!$uriInfo['was_path_checked'] and !is_file($uriInfo['path']))
@@ -398,7 +398,7 @@ class Page implements IPage
                 throw new PieCrustException("Tried to show the posts in category '{$uriInfo['key']}' but the special category listing page was not found.");
             throw new PieCrustException('404');
         }
-        
+
         if ($useRepository)
         {
             $pageRepository = $pieCrust->getEnvironment()->getPageRepository();
@@ -427,17 +427,19 @@ class Page implements IPage
             );
         }
     }
-    
+
     /**
      * Creates a new Page instance given a path.
      */
     public static function createFromPath(IPieCrust $pieCrust, $path, $pageType = IPage::TYPE_REGULAR, $pageNumber = 1, $blogKey = null, $pageKey = null, $date = null)
     {
-        if ($path == null)
+        if ($path == null) {
             throw new InvalidArgumentException("The given path is null.");
-        if (!is_file($path))
+        }
+        if (!is_file($path)) {
             throw new InvalidArgumentException("The given path does not exist: " . $path);
-        
+        }
+
         $relativePath = PieCrustHelper::getRelativePath($pieCrust, $path, true);
         $uri = UriBuilder::buildUri($pieCrust, $relativePath);
         return new Page(
