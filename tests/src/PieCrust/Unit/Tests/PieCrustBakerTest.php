@@ -8,7 +8,6 @@ use PieCrust\PieCrust;
 use PieCrust\Baker\PieCrustBaker;
 use PieCrust\Mock\MockFileSystem;
 use PieCrust\Mock\MockPage;
-use PieCrust\Util\UriBuilder;
 
 
 class PieCrustBakerTest extends PieCrustTestCase
