@@ -1,5 +1,5 @@
 {
-    "name": "bolt80/piecrust",
+    "name": "piecrust-php/piecrust",
     "description": "A lightweight CMS and static website generator.",
     "homepage": "http://bolt80.com/piecrust",
     "authors": [
@@ -41,7 +41,7 @@
         "bolt80/stupidhttp": "v0.2.0",
         "pear/pear": "V1.10.5",
         "pear/console_commandline": "v1.2.2",
-        "pear/log": "v1.13.1"
+        "apache/log4php": "^2.3"
     },
     "require-dev": {
 		"phpunit/phpunit": "v5.6.8",
