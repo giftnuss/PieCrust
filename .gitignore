@@ -38,3 +38,4 @@ libs/symfony/yaml/Symfony/Component/Yaml/Tests
 # 
 composer.lock
 phpunit.xml
+cover/
