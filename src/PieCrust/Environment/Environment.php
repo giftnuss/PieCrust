@@ -124,7 +124,8 @@ abstract class Environment
     protected function __construct($logger = null)
     {
         if ($logger == null)
-            $logger = \Log::singleton('null', '', '');
+            $logger = \Logger::getRootLogger();
+            #\Log::singleton('null', '', '');
         $this->logger = $logger;
 
         $this->fileSystem = null;
