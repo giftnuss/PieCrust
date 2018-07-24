@@ -106,11 +106,11 @@ class PieCrustBaker implements IBaker
     public function setBakeDir($dir)
     {
         $this->bakeDir = rtrim($dir, '/\\') . DIRECTORY_SEPARATOR;
-
         try
         {
             PathHelper::ensureDirectory($this->bakeDir, true);
-            $this->bakeDir = realpath($this->bakeDir);
+            // this does not work with vfs://
+            // $this->bakeDir = realpath($this->bakeDir);
         }
         catch (Exception $e)
         {
@@ -197,8 +197,9 @@ class PieCrustBaker implements IBaker
         $this->logger->debug("  Root URL: " . $this->pieCrust->getConfig()->getValue('site/root'));
 
         // Setup the PieCrust environment.
-        if ($this->parameters['copy_assets'])
+        if ($this->parameters['copy_assets']) {
             $this->pieCrust->getEnvironment()->getPageRepository()->setAssetUrlBaseRemap('%site_root%%uri%');
+        }
         $this->pieCrust->getConfig()->setValue('baker/is_baking', true);
 
         // Create the bake record.
@@ -278,7 +279,7 @@ class PieCrustBaker implements IBaker
         $this->pieCrust->getConfig()->setValue('baker/is_baking', false);
 
         $this->logger->info('-------------------------');
-        $this->logger->notice(self::formatTimed($overallStart, 'done baking'));
+        $this->logger->info(self::formatTimed($overallStart, 'done baking'));
     }
 
     protected function cleanLevel0Cache()
