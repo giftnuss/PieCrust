@@ -24,7 +24,7 @@ class HierarchicalFileSystem extends SimpleFileSystem
             return array();
 
         $result = array();
-        
+
         $years = array();
         $yearsIterator = new FilesystemIterator($postsDir);
         foreach ($yearsIterator as $year)
@@ -34,11 +34,11 @@ class HierarchicalFileSystem extends SimpleFileSystem
 
             if (preg_match('/^\d{4}$/', $year->getFilename()) === false)
                 continue;
-            
+
             $thisYear = $year->getFilename();
             $years[] = $thisYear;
         }
-        
+
         foreach ($years as $year)
         {
             $months = array();
@@ -50,11 +50,11 @@ class HierarchicalFileSystem extends SimpleFileSystem
 
                 if (preg_match('/^\d{2}$/', $month->getFilename()) === false)
                     continue;
-                
+
                 $thisMonth = $month->getFilename();
                 $months[] = $thisMonth;
             }
-            
+
             foreach ($months as $month)
             {
                 $postsIterator = new FilesystemIterator($postsDir . $year . '/' . $month);
@@ -73,7 +73,7 @@ class HierarchicalFileSystem extends SimpleFileSystem
                         $path->getFilename(),
                         $matches))
                     {
-                        $this->pieCrust->getEnvironment()->getLog()->warning(
+                        $this->pieCrust->getEnvironment()->getLog()->warn(
                             "File '{$path->getPathname()}' is not formatted as 'DD_slug-title.{$extension}' and is ignored. Is that a typo?"
                         );
                         continue;
@@ -89,10 +89,10 @@ class HierarchicalFileSystem extends SimpleFileSystem
                 }
             }
         }
-        
+
         return $result;
     }
-    
+
     public function getPostFilenameFormat()
     {
         return '%year%/%month%/%day%_%slug%.%ext%';

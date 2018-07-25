@@ -14,9 +14,9 @@ class TemplateRenderingTest extends PieCrustTestCase
     public function renderTemplateDataProvider()
     {
         $data = array();
-        
+
         $files = new \GlobIterator(
-            PIECRUST_UNITTESTS_DATA_DIR . 'templates/*', 
+            PIECRUST_UNITTESTS_DATA_DIR . 'templates/*',
             \GlobIterator::CURRENT_AS_FILEINFO | \GlobIterator::SKIP_DOTS
         );
         foreach ($files as $file)
@@ -24,17 +24,17 @@ class TemplateRenderingTest extends PieCrustTestCase
             $info = pathinfo($file);
             if ($info['extension'] == 'html')
                 continue;
-            
+
             $outFile = $info['dirname'] . DIRECTORY_SEPARATOR . $info['filename'] . '.html';
             if (!is_file($outFile))
                 continue;
-            
+
             $data[] = array($file, $outFile);
         }
-        
+
         return $data;
     }
-    
+
     /**
      * @dataProvider renderTemplateDataProvider
      */
@@ -45,7 +45,7 @@ class TemplateRenderingTest extends PieCrustTestCase
         $pc = $fs->getApp(array('cache' => false));
         $pc->getConfig()->setValue('site/root', 'http://whatever/');
         $pc->setTemplatesDirs(PIECRUST_UNITTESTS_DATA_DIR . 'templates');
-        
+
         $testInfo = pathinfo($testFilename);
         $engine = PieCrustHelper::getTemplateEngine($pc, $testInfo['extension']);
         $this->assertNotNull($engine, "Couldn't find a template engine for extension: ".$testInfo['extension']);
@@ -66,7 +66,7 @@ class TemplateRenderingTest extends PieCrustTestCase
         }
         $actualResults = ob_get_clean();
         $actualResults = str_replace("\r\n", "\n", $actualResults);
-        
+
         // Compare to what we are expecting.
         $expectedResults = file_get_contents($expectedResultsFilename);
         $expectedResults = str_replace("\r\n", "\n", $expectedResults);
@@ -82,8 +82,8 @@ class TemplateRenderingTest extends PieCrustTestCase
                 )
             ))
             ->withPage(
-                'blah', 
-                array('layout' => 'default', 'format' => 'none'), 
+                'blah',
+                array('layout' => 'default', 'format' => 'none'),
                 'Blah blah blah.'
             )
             ->withTemplate('default', 'DEFAULT TEMPLATE: {{content}}')

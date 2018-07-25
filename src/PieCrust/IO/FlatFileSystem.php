@@ -33,21 +33,21 @@ class FlatFileSystem extends SimpleFileSystem
             $extension = pathinfo($path->getFilename(), PATHINFO_EXTENSION);
             if (!in_array($extension, $this->htmlExtensions))
                 continue;
-        
+
             $matches = array();
             $res = preg_match(
-                '/^(\d{4})-(\d{2})-(\d{2})_(.*)\.'.preg_quote($extension, '/').'$/', 
-                $path->getFilename(), 
+                '/^(\d{4})-(\d{2})-(\d{2})_(.*)\.'.preg_quote($extension, '/').'$/',
+                $path->getFilename(),
                 $matches
             );
             if (!$res)
             {
-                $this->pieCrust->getEnvironment()->getLog()->warning(
+                $this->pieCrust->getEnvironment()->getLog()->warn(
                     "File '{$path->getPathname()}' is not formatted as 'YYYY-MM-DD_slug-title.{$extension}' and is ignored. Is that a typo?"
                 );
                 continue;
             }
-            
+
             $result[] = PostInfo::fromStrings(
                 $matches[1],
                 $matches[2],
@@ -59,7 +59,7 @@ class FlatFileSystem extends SimpleFileSystem
         }
         return $result;
     }
-    
+
     public function getPostFilenameFormat()
     {
         return '%year%-%month%-%day%_%slug%.%ext%';

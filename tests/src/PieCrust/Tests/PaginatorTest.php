@@ -36,7 +36,7 @@ class PaginatorTest extends PieCrustTestCase
             array('blog', 3, 14)
         );
     }
-    
+
     /**
      * @dataProvider paginatorDataProvider
      */
@@ -49,15 +49,15 @@ class PaginatorTest extends PieCrustTestCase
         $pc->getConfig()->setValue('site/pretty_urls', true);
         $pc->getConfig()->setValue('blog/posts_per_page', 5);
         $pc->getConfig()->setValue('blog/date_format', 'F j, Y');
-        
+
         $page = new MockPage($pc);
         $page->uri = $uri;
         $page->pageNumber = $pageNumber;
-        
+
         $paginator = new Paginator($page);
         $paginator->setPaginationDataSource($this->buildPaginationDataSource($pc, $postCount));
         $this->assertNotNull($paginator->getPaginationDataSource());
-        
+
         $posts = $paginator->posts();
         $this->assertNotNull($posts);
         if ($postCount <= 5)
@@ -95,8 +95,8 @@ class PaginatorTest extends PieCrustTestCase
             {
                 $this->assertEquals($pageNumber - 1, $paginator->prev_page_number());
 
-                $prevPage = $uri == '' ? 
-                    (string)($pageNumber - 1) : 
+                $prevPage = $uri == '' ?
+                    (string)($pageNumber - 1) :
                     ($uri . '/' . ($pageNumber - 1));
                 if ($pageNumber - 1 <= 1)
                     $prevPage = $uri;
@@ -110,7 +110,7 @@ class PaginatorTest extends PieCrustTestCase
 
             $this->assertEquals($pageNumber, $paginator->this_page_number());
             $this->assertEquals(
-                $siteRoot . ($uri == '' ? (string)$pageNumber : ($uri . '/' . $pageNumber)), 
+                $siteRoot . ($uri == '' ? (string)$pageNumber : ($uri . '/' . $pageNumber)),
                 $paginator->this_page()
             );
 
@@ -182,11 +182,11 @@ class PaginatorTest extends PieCrustTestCase
             }
 
             $this->assertEquals(
-                $pageNumbers, 
+                $pageNumbers,
                 $paginator->all_page_numbers($radius),
                 "Wrong result for {$numberCount} page numbers around page {$pageNumber} out of {$pageCount} total pages.");
         }
-        
+
         $expectedCount = $postCount;
         if ($postCount > 5)
         {
@@ -207,7 +207,7 @@ class PaginatorTest extends PieCrustTestCase
         }
         $this->assertExpectedPostsData($expectedIndices, $posts);
     }
-    
+
     public function fluentFilteringDataProvider()
     {
         return array(
@@ -218,7 +218,7 @@ class PaginatorTest extends PieCrustTestCase
             array(1, 17, function ($it) { $it->skip(2)->limit(3); }, array_reverse(range(12, 14)))
         );
     }
-    
+
     /**
      * @dataProvider fluentFilteringDataProvider
      */
@@ -226,13 +226,13 @@ class PaginatorTest extends PieCrustTestCase
     {
         $pc = new MockPieCrust();
         $pc->getConfig()->setValue('site/posts_per_page', 5);
-        
+
         $page = new MockPage($pc);
-        
+
         $dataSource = $this->buildPaginationDataSource($pc, $postCount);
         $it = new PageIterator($pc, 'blog', $dataSource);
         $it->setCurrentPage($page);
-        
+
         if ($filterFunc)
             $filterFunc($it);
         $this->assertExpectedPostsData($expectedIndices, $it);
@@ -265,12 +265,12 @@ class PaginatorTest extends PieCrustTestCase
 
         $posts = $this->buildPaginationDataSource($pc, $postCount);
         // The pagination data source is ordered in reverse
-        // chronological order. Let's reverse it to be able 
+        // chronological order. Let's reverse it to be able
         // to index next/current/previous posts easily.
         // (the Paginator will reorder them internally)
         $posts = array_reverse($posts);
         $page = $posts[$currentPostIndex];
-        
+
         $paginator = new Paginator($page);
         $paginator->setPaginationDataSource($posts);
 
@@ -333,6 +333,7 @@ class PaginatorTest extends PieCrustTestCase
     public function testSortedPagination($sortByName, $configSetter, $expectedIndices, $sortByReverse = false)
     {
         $pc = new MockPieCrust();
+        $pc->getEnvironment()->getLog()->setLevel(\LoggerLevel::getLevelInfo());
 
         $posts = array();
         for ($i = 0; $i < 10; ++$i)
@@ -390,8 +391,8 @@ class PaginatorTest extends PieCrustTestCase
                 array(),
                 array(
                     1 => array('foo'),
-                    2 => array('bar'), 
-                    4 => array('bar'), 
+                    2 => array('bar'),
+                    4 => array('bar'),
                     7 => array('bar', 'foo'),
                     8 => array('foo', 'bar'),
                     9 => array('foo')
@@ -432,7 +433,7 @@ class PaginatorTest extends PieCrustTestCase
 
         $posts = $this->buildPaginationDataSource($pc, 10);
         // The pagination data source is ordered in reverse
-        // chronological order. Let's reverse it to be able 
+        // chronological order. Let's reverse it to be able
         // to index posts easily.
         // (the Paginator will reorder them internally)
         $posts = array_reverse($posts);
@@ -503,7 +504,7 @@ class PaginatorTest extends PieCrustTestCase
 
         $posts = $this->buildPaginationDataSource($pc, 10);
         // The pagination data source is ordered in reverse
-        // chronological order. Let's reverse it to be able 
+        // chronological order. Let's reverse it to be able
         // to index posts easily.
         // (the Paginator will reorder them internally)
         $posts = array_reverse($posts);
@@ -540,6 +541,7 @@ class PaginatorTest extends PieCrustTestCase
 EOD
             );
         $app = $fs->getApp();
+        $app->getEnvironment()->getLog()->setLevel(\LoggerLevel::getLevelInfo());
         $page = Page::createFromUri($app, '/whatever', false);
         $actual = $page->getContentSegment();
         $expected = <<<EOD
@@ -551,7 +553,7 @@ Foo 1: /_content/posts/2013-10-01_foo1-assets/thumbnail.jpg
 EOD;
         $this->assertEquals($expected, $actual);
     }
-    
+
     protected function buildPaginationDataSource(IPieCrust $pc, $postCount)
     {
         $posts = array();
@@ -562,7 +564,7 @@ EOD;
             $day = (($i * 3) % 28);  // each post on some day between 0 and 27.
             $name = ("test-post-number-$i-name");
             $path = ("test-post-number-$i-path.html");
-            
+
             $dummyPage = new MockPage($pc);
             $dummyPage->uri = $name;
             $dummyPage->path = $path;
@@ -574,10 +576,10 @@ EOD;
         // Reverse the array because we want to return it in reverse
         // chronological order, like a FileSystem implementation would do.
         $posts = array_reverse($posts);
-        
+
         return $posts;
     }
-    
+
     protected function assertExpectedPostsData($expectedIndices, $actualPosts)
     {
         $this->assertEquals(count($expectedIndices), count($actualPosts));

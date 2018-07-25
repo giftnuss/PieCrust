@@ -160,16 +160,16 @@ class PieCrustBaker implements IBaker
         $variantName = $this->parameters['config_variant'];
         if ($variantName)
         {
-            $this->logger->warning("The `--config` parameter has been moved to a global parameter (specified before the command).");
+            $this->logger->warn("The `--config` parameter has been moved to a global parameter (specified before the command).");
             $this->pieCrust->getConfig()->applyVariant("baker/config_variants/{$variantName}");
-            $this->logger->warning("Variant '{$variantName}' has been applied, but will need to be moved to the new `variants` section of the site configuration.");
+            $this->logger->warn("Variant '{$variantName}' has been applied, but will need to be moved to the new `variants` section of the site configuration.");
         }
         else
         {
             if ($this->pieCrust->getConfig()->hasValue("baker/config_variants/default"))
             {
                 $this->pieCrust->getConfig()->applyVariant("baker/config_variants/default");
-                $this->logger->warning("The default baker configuration variant has been applied, but will need to be moved into the new `variants/baker` section of the site configuration.");
+                $this->logger->warn("The default baker configuration variant has been applied, but will need to be moved into the new `variants/baker` section of the site configuration.");
             }
             else
             {

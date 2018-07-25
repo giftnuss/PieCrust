@@ -16,35 +16,35 @@ class LinkCollector
 {
     protected $pieCrust;
     protected $tagCombinations;
-    
+
     public function getTagCombinations($blogKey)
     {
         if (!isset($this->tagCombinations[$blogKey]))
             return null;
         return array_values($this->tagCombinations[$blogKey]);
     }
-    
+
     public function getAllTagCombinations()
     {
         return $this->tagCombinations;
     }
-    
+
     public function clearTagCombinations($blogKey)
     {
         $this->tagCombinations[$blogKey] = array();
     }
-    
+
     public function clearAllTagCombinations()
     {
         $this->tagCombinations = array();
     }
-    
+
     public function __construct(IPieCrust $pieCrust)
     {
         $this->pieCrust = $pieCrust;
         $this->tagCombinations = array();
     }
-    
+
     public function registerTagCombination($blogKey, $tags)
     {
         if (!is_array($tags))
@@ -54,7 +54,7 @@ class LinkCollector
             $log = $this->pieCrust->getEnvironment()->getLog();
             if (strpos($tags, '/') !== false)
             {
-                $log->warning(
+                $log->warn(
                     "A link to tag {$tags} was specified in this page. ".
                     "If this is a tag that contains a slash character ('/') then ignore this warning. ".
                     "However, if this was intended to be a multi-tags link, you'll need to ".
@@ -71,7 +71,7 @@ class LinkCollector
         {
             $this->tagCombinations[$blogKey] = array();
         }
-        
+
         // Slugify tags and sort them alphabetically.
         $flags = $this->pieCrust->getConfig()->getValue('site/slugify_flags');
         $tags = array_map(

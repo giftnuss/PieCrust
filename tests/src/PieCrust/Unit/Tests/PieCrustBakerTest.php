@@ -17,7 +17,9 @@ class PieCrustBakerTest extends PieCrustTestCase
         $fs = MockFileSystem::create();
         $app = $fs->getApp();
         $baker = new PieCrustBaker($app);
-        $this->assertEquals($baker->getBakeDir(),'');
+        $this->assertStringMatchesFormat(
+            'vfs://root_%i/kitchen/_counter/',
+            $baker->getBakeDir());
     }
 
     public function testDefaultPageBaker()
@@ -29,7 +31,9 @@ class PieCrustBakerTest extends PieCrustTestCase
 
         $pagebaker = $baker->getPageBaker();
         $this->assertEquals($pagebaker->getBakedFiles(),array());
-        $this->assertEquals($pagebaker->getOutputPath($page),'/index.html');
+        $this->assertStringMatchesFormat(
+            'vfs://root_%i/kitchen/_counter/index.html',
+            $pagebaker->getOutputPath($page));
         $this->assertEquals($pagebaker->getPageCount(),0);
     }
 }

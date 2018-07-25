@@ -21,6 +21,7 @@ class PageIteratorTest extends PieCrustTestCase
 EOD
             );
         $pc = $fs->getApp();
+        $pc->getEnvironment()->getLog()->setLevel(\LoggerLevel::getLevelInfo());
         $page = Page::createFromUri($pc, '/foo', false);
         $this->assertEquals(
             <<<EOD
@@ -49,6 +50,7 @@ EOD
 EOD
             );
         $pc = $fs->getApp();
+        $pc->getEnvironment()->getLog()->setLevel(\LoggerLevel::getLevelInfo());
         $page = Page::createFromUri($pc, '/foo', false);
         $this->assertEquals(
             <<<EOD
@@ -74,6 +76,7 @@ EOD
 EOD
             );
         $pc = $fs->getApp();
+        $pc->getEnvironment()->getLog()->setLevel(\LoggerLevel::getLevelInfo());
         $page = Page::createFromUri($pc, '/foo', false);
         $this->assertEquals(
             <<<EOD
@@ -109,6 +112,7 @@ EOD
 EOD
             );
         $pc = $fs->getApp();
+        $pc->getEnvironment()->getLog()->setLevel(\LoggerLevel::getLevelInfo());
         $page = Page::createFromUri($pc, '/foos', false);
         $this->assertEquals(
             <<<EOD
@@ -153,6 +157,7 @@ MYSELF
 EOD
             );
         $pc = $fs->getApp();
+        $pc->getEnvironment()->getLog()->setLevel(\LoggerLevel::getLevelInfo());
         $page = Page::createFromUri($pc, '/foo/test', false);
         $this->assertEquals(
             <<<EOD
@@ -188,6 +193,7 @@ EOD
 EOD
             );
         $pc = $fs->getApp();
+        $pc->getEnvironment()->getLog()->setLevel(\LoggerLevel::getLevelInfo());
         $page = Page::createFromUri($pc, '/foos', false);
         $this->assertEquals(
             <<<EOD
@@ -219,6 +225,7 @@ EOD
 EOD
             );
         $pc = $fs->getApp();
+        $pc->getEnvironment()->getLog()->setLevel(\LoggerLevel::getLevelInfo());
         $page = Page::createFromUri($pc, '/foos', false);
         $this->assertEquals(
             <<<EOD
@@ -256,6 +263,7 @@ EOD
 EOD
             );
         $pc = $fs->getApp();
+        $pc->getEnvironment()->getLog()->setLevel(\LoggerLevel::getLevelInfo());
         $page = Page::createFromUri($pc, '/foos', false);
         $this->assertEquals(
             <<<EOD

@@ -205,6 +205,7 @@ class PageBakerTest extends PieCrustTestCase
                 $contents
             );
         $app = $fs->getApp();
+        $app->getEnvironment()->getLog()->setLevel(\LoggerLevel::getLevelInfo());
         $page = Page::createFromUri($app, $uri, false);
 
         $baker = new PageBaker($app, $fs->url('counter'));
@@ -263,6 +264,7 @@ EOD
             'root' => $fs->url('kitchen'),
             'cache' => false
         ));
+        $app->getEnvironment()->getLog()->setLevel(\LoggerLevel::getLevelInfo());
         $page = Page::createFromUri($app, '/' . $name, false);
 
         $baker = new PageBaker($app, $fs->url('counter'));
@@ -325,6 +327,7 @@ EOD
             'root' => $fs->url('kitchen'),
             'cache' => false
         ));
+        $app->getEnvironment()->getLog()->setLevel(\LoggerLevel::getLevelInfo());
         $page = Page::createFromUri($app, '/' . $name, false);
 
         $baker = new PageBaker($app, $fs->url('counter'));

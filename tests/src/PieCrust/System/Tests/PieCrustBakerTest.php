@@ -19,18 +19,18 @@ class PieCrustBakerTest extends PieCrustTestCase
         $this->assertFalse(is_dir($fs->url('kitchen/_counter')));
         $app = $fs->getApp(array('cache' => false));
         $baker = new PieCrustBaker($app);
-        $baker->setBakeDir($fs->getRootName());
         $this->assertTrue(is_writable($baker->getBakeDir()));
         $baker->bake();
 
         $structure = $fs->getStructure();
         $counter = $structure[$fs->getRootName()]['kitchen']['_counter'];
+        print_r($counter);
         $this->assertEquals(
             array('index.html'),
             $this->getVfsEntries($counter)
         );
     }
-/*
+
     public function testSimpleBake()
     {
         $fs = MockFileSystem::create()
@@ -38,7 +38,6 @@ class PieCrustBakerTest extends PieCrustTestCase
             ->withPage('foo', array(), "Something");
         $app = $fs->getApp(array('cache' => false));
         $baker = new PieCrustBaker($app);
-        $baker->setBakeDir($fs->getRootName());
         $baker->bake();
 
         $structure = $fs->getStructure();
@@ -65,7 +64,6 @@ class PieCrustBakerTest extends PieCrustTestCase
         );
         $app = $fs->getApp(array('cache' => false));
         $baker = new PieCrustBaker($app);
-        $baker->setBakeDir($fs->getRootName());
         $baker->bake();
 
         $this->assertFileExists($fs->url('kitchen/_counter/2012/08/05/test1.html'));
@@ -115,7 +113,6 @@ EOD;
             'root' => $fs->url('kitchen'))
         );
         $baker = new PieCrustBaker($app);
-        $baker->setBakeDir($fs->getRootName());
         $baker->bake();
 
         $this->assertFileExists(
@@ -193,7 +190,6 @@ EOD
         );
 
         $baker = new PieCrustBaker($app);
-        $baker->setBakeDir($fs->getRootName());
         $baker->bake();
 
         $this->assertFileExists($fs->url('kitchen/_counter/foo.html'));
@@ -260,7 +256,6 @@ EOD;
         );
 
         $baker = new PieCrustBaker($app);
-        $baker->setBakeDir($fs->getRootName());
         $baker->bake();
 
         $this->assertFileExists($fs->url('kitchen/_counter/foo.html'));
@@ -292,11 +287,10 @@ EOD;
             array(true, false, 'something/sub/foo', '../../../', '../../../something/blah')
         );
     }
-*/
+
     /**
      * @dataProvider bakePortableUrlsDataProvider
      */
-/*
     public function testBakePortableUrls($prettyUrls, $trailingSlash, $url, $expectedSiteRoot, $expectedBlah)
     {
         $contents = <<<EOD
@@ -328,7 +322,6 @@ EOD;
 
         $savedSiteRoot = $app->getConfig()->getValue('site/root');
         $baker = new PieCrustBaker($app);
-        $baker->setBakeDir($fs->getRootName());
         $baker->bake();
         $this->assertEquals(
             $savedSiteRoot,
@@ -393,11 +386,10 @@ EOD
             )
         );
     }
-*/
+
     /**
      * @dataProvider urlFormatsDataProvider
      */
-/*
     public function testUrlFormats($prettyUrls, $trailingSlash, $expectedContents)
     {
         $fs = MockFileSystem::create();
@@ -426,7 +418,6 @@ EOD
         if ($trailingSlash)
             $app->getConfig()->setValue('baker/trailing_slash', true);
         $baker = new PieCrustBaker($app);
-        $baker->setBakeDir($fs->getRootName());
         $baker->bake();
 
         $otherPagePath = 'other_page.foo';
@@ -463,7 +454,6 @@ EOD
 
         $app = $fs->getApp();
         $baker = new PieCrustBaker($app);
-        $baker->setBakeDir($fs->url('counter'));
         $baker->bake();
 
         $this->assertFileExists($fs->url('counter/first-page.html'));
@@ -504,11 +494,10 @@ EOD
             array('Тест', 'bar', 'Тест', 'bar', '%D0%A2%D0%B5%D1%81%D1%82', 'bar', 'encode')
         );
     }
-*/
+
     /**
      * @dataProvider bakeTagPagesDataProvider
      */
-/*
     public function testBakeTagPages($tag1, $tag2, $fileName1, $fileName2, $slug1, $slug2, $slugify = false)
     {
         $config = array('site' => array(
@@ -547,7 +536,6 @@ EOD
 
         $app = $fs->getApp();
         $baker = new PieCrustBaker($app);
-        $baker->setBakeDir($fs->url('counter'));
         $baker->bake();
 
         $tagFileNames = array(
@@ -616,7 +604,6 @@ EOD
 
         $app = $fs->getApp();
         $baker = new PieCrustBaker($app);
-        $baker->setBakeDir($fs->url('counter'));
         $baker->bake();
 
         $this->assertEquals(
@@ -665,7 +652,6 @@ EOD
     /**
      * @dataProvider bakeCategoryPageDataProvider
      */
-/*
     public function testBakeCategoryPage($cat1, $cat2, $fileName1, $fileName2, $slug1, $slug2, $slugify = false)
     {
         $config = array(
@@ -697,7 +683,6 @@ EOD
 
         $app = $fs->getApp();
         $baker = new PieCrustBaker($app);
-        $baker->setBakeDir($fs->url('counter'));
         $baker->bake();
 
         $categoryFileNames = array($fileName1.'.html', $fileName2.'.html');
@@ -748,7 +733,6 @@ EOD
 
         $app = $fs->getApp();
         $baker = new PieCrustBaker($app);
-        $baker->setBakeDir($fs->url('counter'));
         $baker->bake();
 
         $this->assertEquals(
@@ -804,7 +788,6 @@ EOD
 
         $app = $fs->getApp();
         $baker = new PieCrustBaker($app);
-        $baker->setBakeDir($fs->url('counter'));
         $baker->bake();
 
         $expected = <<<EOD
@@ -872,7 +855,6 @@ EOD
 
         $app = $fs->getApp();
         $baker = new PieCrustBaker($app);
-        $baker->setBakeDir($fs->url('counter'));
         $baker->bake();
 
         $this->assertEquals(
@@ -1001,7 +983,6 @@ EOD
 
         $app = $fs->getApp();
         $baker = new PieCrustBaker($app);
-        $baker->setBakeDir($fs->url('counter'));
         $baker->bake();
 
         $this->assertEquals(
@@ -1058,7 +1039,6 @@ EOD
 
         $app = $fs->getApp();
         $baker = new PieCrustBaker($app);
-        $baker->setBakeDir($fs->url('counter'));
         $baker->bake();
 
         $structure = $fs->getStructure();
@@ -1090,7 +1070,6 @@ EOD
 
         $app = $fs->getApp();
         $baker = new PieCrustBaker($app);
-        $baker->setBakeDir($fs->url('counter'));
         $baker->bake();
 
         $structure = $fs->getStructure();
@@ -1103,7 +1082,6 @@ EOD
         unlink($fs->url('kitchen/_content/pages/bar.html'));
         $app = $fs->getApp();
         $baker = new PieCrustBaker($app);
-        $baker->setBakeDir($fs->url('counter'));
         $baker->bake();
 
         $structure = $fs->getStructure();
@@ -1148,7 +1126,6 @@ EOD
 
         $app = $fs->getApp();
         $baker = new PieCrustBaker($app);
-        $baker->setBakeDir($fs->url('counter'));
         $baker->bake();
 
         $structure = $fs->getStructure();
@@ -1168,7 +1145,6 @@ EOD
         )));
         $app = $fs->getApp();
         $baker = new PieCrustBaker($app);
-        $baker->setBakeDir($fs->url('counter'));
         $baker->bake();
 
         $structure = $fs->getStructure();
@@ -1182,7 +1158,7 @@ EOD
             array_keys($counter['foo'])
         );
     }
-*/
+
     private function getVfsEntries($structure)
     {
         $entries = array_keys($structure);
@@ -1192,8 +1168,9 @@ EOD
             // an entry called '0' if you're creating a directory with the
             // recursive version of 'mkdir' (passing 'true' as the 3rd parameter).
             $zero = array_search(0, $entries, true);
-            if ($zero !== false)
+            if ($zero !== false) {
                 array_splice($entries, $zero, 1);
+            }
         }
         return $entries;
     }

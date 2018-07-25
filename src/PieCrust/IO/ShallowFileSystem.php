@@ -32,11 +32,11 @@ class ShallowFileSystem extends SimpleFileSystem
 
             if (preg_match('/^\d{4}$/', $year->getFilename()) == false)
                 continue;
-            
+
             $thisYear = $year->getFilename();
             $years[] = $thisYear;
         }
-        
+
         $result = array();
         foreach ($years as $year)
         {
@@ -49,14 +49,14 @@ class ShallowFileSystem extends SimpleFileSystem
                 $extension = pathinfo($path->getFilename(), PATHINFO_EXTENSION);
                 if (!in_array($extension, $this->htmlExtensions))
                     continue;
-        
+
                 $matches = array();
                 if (!preg_match(
                     '/^(\d{2})-(\d{2})_(.*)\.'.preg_quote($extension, '/').'$/',
                     $path->getFilename(),
                     $matches))
                 {
-                    $this->pieCrust->getEnvironment()->getLog()->warning(
+                    $this->pieCrust->getEnvironment()->getLog()->warn(
                         "File '{$path->getPathname()}' is not formatted as 'MM-DD_slug-title.{$extension}' and is ignored. Is that a typo?"
                     );
                     continue;
@@ -73,7 +73,7 @@ class ShallowFileSystem extends SimpleFileSystem
         }
         return $result;
     }
-    
+
     public function getPostFilenameFormat()
     {
         return '%year%/%month%-%day%_%slug%.%ext%';

@@ -24,7 +24,7 @@ class PageIterator extends BaseIterator
 {
     protected $pieCrust;
     protected $blogKey;
-    
+
     protected $iterator;
     protected $gotSorter;
     protected $isLocked;
@@ -33,14 +33,14 @@ class PageIterator extends BaseIterator
     protected $previousPost;
     protected $nextPost;
     protected $paginationSlicer;
-    
+
     public function __construct(IPieCrust $pieCrust, $blogKey, array $dataSource)
     {
         parent::__construct();
 
         $this->pieCrust = $pieCrust;
         $this->blogKey = $blogKey;
-        
+
         $this->iterator = new WrapperIterator($dataSource);
         $this->gotSorter = false;
         $this->isLocked = false;
@@ -62,13 +62,13 @@ class PageIterator extends BaseIterator
         $this->unload();
         $this->page = $page;
     }
-    
+
     public function setFilter(PaginationFilter $filter)
     {
         $this->unload();
         $this->iterator = new ConfigFilterIterator($this->iterator, $filter);
     }
-    
+
     public function setPagination($skip, $limit)
     {
         if ($this->page == null)
@@ -127,7 +127,7 @@ class PageIterator extends BaseIterator
         $this->iterator = new SliceIterator($this->iterator, $count);
         return $this;
     }
-    
+
     /**
      * @include
      * @noCall
@@ -141,7 +141,7 @@ class PageIterator extends BaseIterator
         $this->iterator = new SliceIterator($this->iterator, 0, $count);
         return $this;
     }
-    
+
     /**
      * @include
      * @noCall
@@ -165,7 +165,7 @@ class PageIterator extends BaseIterator
     {
         if ($this->page == null)
             throw new PieCrustException("Can't use 'filter()' because no parent page was set for the pagination iterator.");
-        
+
         $filterDefinition = $this->page->getConfig()->getValue($filterName);
         if ($filterDefinition == null)
             throw new PieCrustException("Couldn't find filter '{$filterName}' in the configuration header for page: {$this->page->getPath()}");
@@ -204,7 +204,7 @@ class PageIterator extends BaseIterator
         {
             return $this->filterPropertyArray(substr($name, 4), $arguments);
         }
-       
+
         if (strncmp('with_', $name, 5) === 0)
         {
             return $this->filterPropertyArray(substr($name, 5), $arguments);
@@ -266,11 +266,11 @@ class PageIterator extends BaseIterator
         return $this->items[0];
     }
     // }}}
-    
+
     // {{{ Shortcut template members
     public function sortBy($name, $reverse = false)
     {
-        $this->pieCrust->getEnvironment()->getLog()->warning(
+        $this->pieCrust->getEnvironment()->getLog()->warn(
             "The `sortBy` template method has been renamed `sort`."
         );
         return $this->sort($name, $reverse);
@@ -281,7 +281,7 @@ class PageIterator extends BaseIterator
         return $this->with_tags($tag);
     }
     // }}}
-    
+
     // {{{ Protected members
     protected function ensureUnlocked()
     {
@@ -316,13 +316,13 @@ class PageIterator extends BaseIterator
             $this->previousPost = $prevAndNextPostData[0];
             $this->nextPost = $prevAndNextPostData[1];
         }
-        
+
         // Get the posts data, and use that as the items we'll return.
         $items = $this->getPostsData($posts);
 
         return $items;
     }
-    
+
     protected function getPostsData(array $posts)
     {
         $postsData = array();

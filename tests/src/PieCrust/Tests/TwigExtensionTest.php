@@ -51,7 +51,7 @@ class TwigExtensionTest extends PieCrustTestCase
             ),
             array(
                 array(
-                    'site' => array('pretty_urls' => true), 
+                    'site' => array('pretty_urls' => true),
                     'baker' => array('is_baking' => true)
                 ),
                 array(
@@ -147,8 +147,8 @@ class TwigExtensionTest extends PieCrustTestCase
         $fs = MockFileSystem::create()
             ->withConfig($siteConfig)
             ->withPage(
-                'test1', 
-                array('format' => 'none', 'layout' => 'none'), 
+                'test1',
+                array('format' => 'none', 'layout' => 'none'),
                 <<<EOD
 {{pcurl('foo')}}
 {{pcurl('foo/bar')}}
@@ -160,6 +160,7 @@ class TwigExtensionTest extends PieCrustTestCase
 EOD
         );
         $app = $fs->getApp();
+        $app->getEnvironment()->getLog()->setLevel(\LoggerLevel::getLevelInfo());
         $page = Page::createFromUri($app, '/test1');
         $pageRenderer = new PageRenderer($page);
         $output = $pageRenderer->get();
@@ -214,7 +215,7 @@ EOD
             ),
             array(
                 array(
-                    'site' => array('pretty_urls' => true), 
+                    'site' => array('pretty_urls' => true),
                     'baker' => array('is_baking' => true)
                 ),
                 array(
@@ -259,6 +260,7 @@ EOD
 EOD
             );
         $app = $fs->getApp();
+        $app->getEnvironment()->getLog()->setLevel(\LoggerLevel::getLevelInfo());
         $page = Page::createFromUri($app, '/test1');
         $pageRenderer = new PageRenderer($page);
         $output = $pageRenderer->get();
@@ -301,6 +303,7 @@ EOD
                 "{{pctagurl('{$in}')}}"
             );
         $app = $fs->getApp();
+        $app->getEnvironment()->getLog()->setLevel(\LoggerLevel::getLevelInfo());
         $page = Page::createFromUri($app, '/test');
         $actual = $page->getContentSegment();
         $this->assertEquals($out, $actual);
@@ -310,7 +313,7 @@ EOD
     {
         $fs = MockFileSystem::create()
             ->withConfig(array('site' => array(
-                'root' => 'localhost', 
+                'root' => 'localhost',
                 'pretty_urls' => true,
                 'default_format' => 'none'
             )))
@@ -332,6 +335,7 @@ LINK: {{pctagurl(t)}}
 EOD
             );
         $app = $fs->getApp();
+        $app->getEnvironment()->getLog()->setLevel(\LoggerLevel::getLevelInfo());
         $page = Page::createFromUri($app, '/test');
         $actual = $page->getContentSegment();
         $expected = <<<EOD
