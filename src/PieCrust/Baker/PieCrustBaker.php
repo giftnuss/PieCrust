@@ -99,6 +99,19 @@ class PieCrustBaker implements IBaker
         }
         return $this->bakeDir;
     }
+    
+    private function prepareOutputPath()
+    {	
+		$pieCrust = $this->pieCrust;
+        $outputDir = $this->getParameterValue('output');
+        if(!$outputDir && $pieCrust->getConfig()->hasValue('site/output')){
+			$outputDir = $pieCrust->getConfig()->getValue('site/output');
+		}
+        if(is_string($outputDir)){
+			$this->logger->debug("Setting output directory to '$outputDir'");
+            $this->setBakeDir($outputDir);
+        }
+    }
 
     /**
      * Sets the bake (output) directory.
@@ -125,6 +138,7 @@ class PieCrustBaker implements IBaker
     {
         $this->pieCrust = $pieCrust;
         $this->pieCrust->getConfig()->setValue('baker/is_baking', false);
+        $this->logger = $pieCrust->getEnvironment()->getLog();
 
         $bakerParametersFromApp = $this->pieCrust->getConfig()->getValue('baker');
         if ($bakerParametersFromApp == null) {
@@ -147,13 +161,10 @@ class PieCrustBaker implements IBaker
             $bakerParametersFromApp,
             $bakerParameters
         );
-        $outputDir = $this->getParameterValue('output');
-        if($outputDir){
-            $this->setBakeDir($outputDir);
-        }
+        
+        $this->prepareOutputPath();
 
         $this->pageBaker = null;
-        $this->logger = $pieCrust->getEnvironment()->getLog();
 
         // New way: apply the `baker` variant.
         // Old way: apply the specified variant, or the default one. Warn about deprecation.
