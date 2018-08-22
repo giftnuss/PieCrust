@@ -1,5 +1,37 @@
 [
     {
+        "name": "apache/log4php",
+        "version": "2.3.0",
+        "version_normalized": "2.3.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://git-wip-us.apache.org/repos/asf/logging-log4php.git",
+            "reference": "cac428b6f67d2035af39784da1d1a299ef42fcf2"
+        },
+        "require": {
+            "php": ">=5.2.7"
+        },
+        "time": "2012-10-26T09:13:25+00:00",
+        "type": "library",
+        "installation-source": "source",
+        "autoload": {
+            "classmap": [
+                "src/main/php/"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "Apache-2.0"
+        ],
+        "description": "A versatile logging framework for PHP",
+        "homepage": "http://logging.apache.org/log4php/",
+        "keywords": [
+            "log",
+            "logging",
+            "php"
+        ]
+    },
+    {
         "name": "bolt80/stupidhttp",
         "version": "v0.2.0",
         "version_normalized": "0.2.0.0",
@@ -362,17 +394,17 @@
     },
     {
         "name": "myclabs/deep-copy",
-        "version": "1.8.0",
-        "version_normalized": "1.8.0.0",
+        "version": "1.8.1",
+        "version_normalized": "1.8.1.0",
         "source": {
             "type": "git",
             "url": "https://github.com/myclabs/DeepCopy.git",
-            "reference": "478465659fd987669df0bd8a9bf22a8710e5f1b6"
+            "reference": "3e01bdad3e18354c3dce54466b7fbe33a9f9f7f8"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/myclabs/DeepCopy/zipball/478465659fd987669df0bd8a9bf22a8710e5f1b6",
-            "reference": "478465659fd987669df0bd8a9bf22a8710e5f1b6",
+            "url": "https://api.github.com/repos/myclabs/DeepCopy/zipball/3e01bdad3e18354c3dce54466b7fbe33a9f9f7f8",
+            "reference": "3e01bdad3e18354c3dce54466b7fbe33a9f9f7f8",
             "shasum": ""
         },
         "require": {
@@ -386,7 +418,7 @@
             "doctrine/common": "^2.6",
             "phpunit/phpunit": "^7.1"
         },
-        "time": "2018-05-29T17:25:09+00:00",
+        "time": "2018-06-11T23:09:50+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
@@ -619,61 +651,6 @@
             }
         ],
         "description": "More info available on: http://pear.php.net/package/Console_Getopt"
-    },
-    {
-        "name": "pear/log",
-        "version": "1.13.1",
-        "version_normalized": "1.13.1.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/pear/Log.git",
-            "reference": "c4be9ded2353c7c231d4c35cc3da75b209453803"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/pear/Log/zipball/c4be9ded2353c7c231d4c35cc3da75b209453803",
-            "reference": "c4be9ded2353c7c231d4c35cc3da75b209453803",
-            "shasum": ""
-        },
-        "require": {
-            "pear/pear_exception": "1.0.0",
-            "php": ">5.2"
-        },
-        "require-dev": {
-            "phpunit/phpunit": "*"
-        },
-        "suggest": {
-            "pear/db": "Install optionally via your project's composer.json"
-        },
-        "time": "2016-04-16T00:49:33+00:00",
-        "type": "library",
-        "installation-source": "dist",
-        "autoload": {
-            "psr-0": {
-                "Log": "./"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "include-path": [
-            ""
-        ],
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Jon Parise",
-                "email": "jon@php.net",
-                "homepage": "http://www.indelible.org",
-                "role": "Developer"
-            }
-        ],
-        "description": "PEAR Logging Framework",
-        "homepage": "http://pear.github.io/Log/",
-        "keywords": [
-            "log",
-            "logging"
-        ]
     },
     {
         "name": "pear/pear",
@@ -2143,9 +2120,140 @@
         ]
     },
     {
+        "name": "symfony/polyfill-mbstring",
+        "version": "v1.8.0",
+        "version_normalized": "1.8.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/symfony/polyfill-mbstring.git",
+            "reference": "3296adf6a6454a050679cde90f95350ad604b171"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/3296adf6a6454a050679cde90f95350ad604b171",
+            "reference": "3296adf6a6454a050679cde90f95350ad604b171",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.3"
+        },
+        "suggest": {
+            "ext-mbstring": "For best performance"
+        },
+        "time": "2018-04-26T10:06:28+00:00",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "1.8-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Symfony\\Polyfill\\Mbstring\\": ""
+            },
+            "files": [
+                "bootstrap.php"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Nicolas Grekas",
+                "email": "p@tchwork.com"
+            },
+            {
+                "name": "Symfony Community",
+                "homepage": "https://symfony.com/contributors"
+            }
+        ],
+        "description": "Symfony polyfill for the Mbstring extension",
+        "homepage": "https://symfony.com",
+        "keywords": [
+            "compatibility",
+            "mbstring",
+            "polyfill",
+            "portable",
+            "shim"
+        ]
+    },
+    {
+        "name": "symfony/translation",
+        "version": "v3.4.13",
+        "version_normalized": "3.4.13.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/symfony/translation.git",
+            "reference": "0d1c0965c3e82250b9786909cf584fd4a50c9c5b"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/symfony/translation/zipball/0d1c0965c3e82250b9786909cf584fd4a50c9c5b",
+            "reference": "0d1c0965c3e82250b9786909cf584fd4a50c9c5b",
+            "shasum": ""
+        },
+        "require": {
+            "php": "^5.5.9|>=7.0.8",
+            "symfony/polyfill-mbstring": "~1.0"
+        },
+        "conflict": {
+            "symfony/config": "<2.8",
+            "symfony/dependency-injection": "<3.4",
+            "symfony/yaml": "<3.4"
+        },
+        "require-dev": {
+            "psr/log": "~1.0",
+            "symfony/config": "~2.8|~3.0|~4.0",
+            "symfony/dependency-injection": "~3.4|~4.0",
+            "symfony/finder": "~2.8|~3.0|~4.0",
+            "symfony/intl": "^2.8.18|^3.2.5|~4.0",
+            "symfony/yaml": "~3.4|~4.0"
+        },
+        "suggest": {
+            "psr/log-implementation": "To use logging capability in translator",
+            "symfony/config": "",
+            "symfony/yaml": ""
+        },
+        "time": "2018-07-23T08:18:36+00:00",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "3.4-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Symfony\\Component\\Translation\\": ""
+            },
+            "exclude-from-classmap": [
+                "/Tests/"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Fabien Potencier",
+                "email": "fabien@symfony.com"
+            },
+            {
+                "name": "Symfony Community",
+                "homepage": "https://symfony.com/contributors"
+            }
+        ],
+        "description": "Symfony Translation Component",
+        "homepage": "https://symfony.com"
+    },
+    {
         "name": "symfony/yaml",
-        "version": "v3.4.10",
-        "version_normalized": "3.4.10.0",
+        "version": "v3.4.13",
+        "version_normalized": "3.4.13.0",
         "source": {
             "type": "git",
             "url": "https://github.com/symfony/yaml.git",

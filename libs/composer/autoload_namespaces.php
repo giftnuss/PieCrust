@@ -17,7 +17,7 @@ return array(
     'Netcarver\\Textile' => array($vendorDir . '/netcarver/textile/src'),
     'Mustache' => array($vendorDir . '/mustache/mustache/src'),
     'Michelf' => array($vendorDir . '/michelf/php-markdown', $vendorDir . '/michelf/php-smartypants'),
-    'Log' => array($vendorDir . '/pear', $vendorDir . '/pear/log'),
+    'Log' => array($vendorDir . '/pear'),
     'Console' => array($vendorDir . '/pear', $vendorDir . '/pear/console_commandline', $vendorDir . '/pear/console_getopt'),
     'Benchmark_' => array($vendorDir . '/pear'),
     'Archive_Tar' => array($vendorDir . '/pear/archive_tar'),

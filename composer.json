@@ -30,7 +30,8 @@
     ],
     "require": {
         "php": ">= 5.5.9",
-        "symfony/yaml": "v3.4.10",
+        "symfony/yaml": "~v3.4.10",
+        "symfony/translation": "~v3.4.12",
         "twig/twig": "v1.35.3",
         "mustache/mustache": "~2",
         "geshi/geshi": "1.0.*",
