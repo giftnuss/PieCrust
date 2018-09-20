@@ -13,6 +13,11 @@ if (!defined('PHP_VERSION_ID') or PHP_VERSION_ID < 50300)
 error_reporting(E_ALL & ~E_DEPRECATED & ~E_NOTICE & ~E_STRICT);
 
 require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . 'piecrust.php';
-$returnCode = piecrust_chef();
+
+try {
+   $returnCode = piecrust_chef();
+} catch ( Exception $e ) {
+   echo $e->getTraceAsString();
+}
 exit($returnCode);
 
