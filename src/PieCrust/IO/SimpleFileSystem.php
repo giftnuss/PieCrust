@@ -14,7 +14,7 @@ abstract class SimpleFileSystem extends FileSystem
 {
     protected $pagesDir;
     protected $postsDir;
-    
+
     public function initialize(IPieCrust $pieCrust)
     {
         parent::initialize($pieCrust);
@@ -43,21 +43,22 @@ abstract class SimpleFileSystem extends FileSystem
             return array();
 
         $pages = array();
-        $iterator = new \RecursiveIteratorIterator(
-            new PagesRecursiveFilterIterator(
-                new \RecursiveDirectoryIterator($this->pagesDir)
-            )
-        );
-        foreach ($iterator as $path)
-        {
-            $pagePath = $path->getPathname();
-            // Skip files in page asset folders.
-            if (preg_match('#\-assets[/\\\\]#', $pagePath))
-                continue;
+        if(is_dir($this->pagesDir)) {
+            $iterator = new \RecursiveIteratorIterator(
+                new PagesRecursiveFilterIterator(
+                    new \RecursiveDirectoryIterator($this->pagesDir)
+                )
+            );
+            foreach ($iterator as $path)
+            {
+                $pagePath = $path->getPathname();
+                // Skip files in page asset folders.
+                if (preg_match('#\-assets[/\\\\]#', $pagePath))
+                    continue;
 
-            $pages[] = new PageInfo($this->pagesDir, $pagePath);
+                $pages[] = new PageInfo($this->pagesDir, $pagePath);
+            }
         }
-
         return $pages;
     }
 

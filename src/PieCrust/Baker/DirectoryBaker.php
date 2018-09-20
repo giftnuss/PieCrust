@@ -32,7 +32,7 @@ class DirectoryBaker implements IBaker
     {
         return $this->bakedFiles;
     }
-    
+
     protected $processors;
     /**
     * Gets the file processors.
@@ -49,14 +49,14 @@ class DirectoryBaker implements IBaker
         return $this->bakeDir;
     }
     // }}}
-    
+
     /**
      * Creates a new instance of DirectoryBaker.
      */
     public function __construct(IPieCrust $pieCrust, $bakeDir, array $parameters = array(), $logger = null)
     {
         $this->pieCrust = $pieCrust;
-        $this->tmpDir = $this->pieCrust->isCachingEnabled() ? 
+        $this->tmpDir = $this->pieCrust->isCachingEnabled() ?
             $this->pieCrust->getCacheDir() . 'bake_t/' :
             rtrim(sys_get_temp_dir(), '/\\') . '/piecrust/bake_t/';
         $this->bakeDir = rtrim(str_replace('\\', '/', $bakeDir), '/') . '/';
@@ -81,7 +81,7 @@ class DirectoryBaker implements IBaker
         {
             $this->parameters['mounts']['theme'] = $this->pieCrust->getThemeDir();
         }
-        
+
         // Validate skip patterns.
         $this->parameters['skip_patterns'] = self::validatePatterns(
             $this->parameters['skip_patterns'],
@@ -92,7 +92,7 @@ class DirectoryBaker implements IBaker
         $this->parameters['force_patterns'] = self::validatePatterns(
             $this->parameters['force_patterns']
         );
-        
+
         // Compute the number of characters we need to remove from file paths
         // to get their relative paths.
         $rootDir = $this->pieCrust->getRootDir();
@@ -104,13 +104,13 @@ class DirectoryBaker implements IBaker
         }
 
         $this->bakedFiles = array();
-        
+
         if (!is_dir($this->bakeDir) or !is_writable($this->bakeDir))
         {
             throw new PieCrustException('The bake directory is not writable, or does not exist: ' . $this->bakeDir);
         }
     }
-    
+
     /**
      * Bakes the app's root directory and all its files and sub-directories,
      * or just bakes the given file, if any.
@@ -129,9 +129,9 @@ class DirectoryBaker implements IBaker
             // Bake everything (root directory and special mount points).
             $this->logger->debug("Initiating bake on: {$this->pieCrust->getRootDir()}");
             $this->bakeDirectory(
-                $this->pieCrust->getRootDir(), 
-                0, 
-                $this->pieCrust->getRootDir(), 
+                $this->pieCrust->getRootDir(),
+                0,
+                $this->pieCrust->getRootDir(),
                 $this->rootDirLength
             );
             foreach ($this->parameters['mounts'] as $name => $dir)
@@ -197,14 +197,16 @@ class DirectoryBaker implements IBaker
                 $this->logger->debug("Skipping '$relative' [skip_patterns]");
                 continue;
             }
-            
+
             if ($i->isDir())
             {
                 // Current path is a directory... recurse into it, unless it's
                 // actually the directory we're baking *into* (which would cause
                 // an infinite loop and lots of files being created!).
                 $normalizedAbsolute = rtrim($absolute, '/') . '/';
-                if ($normalizedAbsolute == $this->bakeDir)
+                $normalizedRelative = rtrim($relative, '/') . '/';
+                if ($normalizedRelative == $this->bakeDir ||
+                    $normalizedAbsolute == $this->bakeDir)
                 {
                     continue;
                 }
@@ -212,8 +214,9 @@ class DirectoryBaker implements IBaker
                 $destination = $this->bakeDir . $relative;
                 if (!is_dir($destination))
                 {
-                    if (@mkdir($destination, 0777, true) === false)
+                    if (@mkdir($destination, 0777, true) === false) {
                         throw new PieCrustException("Can't create directory: " . $destination);
+                    }
                 }
                 $this->bakeDirectory($absolute, $level + 1, $rootDir, $rootDirLength);
             }
