@@ -19,7 +19,7 @@
                 "name": "geshi/geshi",
                 "version": "1.0.8.11",
                 "dist": {
-                    "url":  "http://sourceforge.net/projects/geshi/files/geshi/GeSHi%201.0.8.11/GeSHi-1.0.8.11.zip/download",
+                    "url":  "https://sourceforge.net/projects/geshi/files/geshi/GeSHi%201.0.8.11/GeSHi-1.0.8.11.zip/download",
                     "type": "zip"
                 },
                 "autoload": {
@@ -29,7 +29,7 @@
         }
     ],
     "require": {
-        "php": ">= 5.5.9",
+        "php": ">= 5.6.0",
         "symfony/yaml": "~v3.4.10",
         "symfony/translation": "~v3.4.12",
         "twig/twig": "v1.35.3",
@@ -57,8 +57,7 @@
         }
     },
 	"include-path": [ "libs/pear" ],
-    "config": {
-        "vendor-dir": "libs",
-        "bin-dir": "libs/bin"
-    }
+    "bin": [
+        "piecrust"
+    ]
 }
