@@ -2,6 +2,7 @@
 
 namespace PieCrust\Environment;
 
+use Logger;
 use PieCrust\IPieCrust;
 use PieCrust\PieCrustException;
 use PieCrust\IO\FileSystemFactory;
@@ -105,14 +106,16 @@ abstract class Environment
             }
 
             // Preserve the debug flag if needed.
-            if ($this->pieCrust->isDebuggingEnabled() && !$isBaking)
-            {
-                if ($isPretty)
+            if ($this->pieCrust->isDebuggingEnabled() && !$isBaking) {
+                if ($isPretty) {
                     $this->uriFormat .= '?!debug';
-                else if (strpos($this->uriFormat, '?') === false)
+                }
+                else if (strpos($this->uriFormat, '?') === false) {
                     $this->uriFormat .= '?!debug';
-                else
+                }
+                else {
                     $this->uriFormat .= '&!debug';
+                }
             }
         }
         return $this->uriFormat;
@@ -123,9 +126,10 @@ abstract class Environment
      */
     protected function __construct($logger = null)
     {
-        if ($logger == null)
-            $logger = \Logger::getRootLogger();
+        if ($logger == null) {
+            $logger = Logger::getRootLogger();
             #\Log::singleton('null', '', '');
+        }
         $this->logger = $logger;
 
         $this->fileSystem = null;
