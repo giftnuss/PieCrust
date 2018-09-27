@@ -80,7 +80,7 @@ function piecrust_setup($profile = 'web')
     // and Smartypants that have conditional include directories (i.e. include
     // a different implement of the same class based on runtime conditions).
     $srcDir = __DIR__ . '/src';
-    $libsDir = __DIR__ . '/libs';
+    $libsDir = __DIR__ . '/vendor';
     set_include_path(
         get_include_path() . PATH_SEPARATOR .
         $libsDir . '/pear' . PATH_SEPARATOR .

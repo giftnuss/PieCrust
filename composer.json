@@ -42,6 +42,7 @@
         "bolt80/stupidhttp": "v0.2.0",
         "pear/pear": "V1.10.5",
         "pear/console_commandline": "v1.2.2",
+        "pear/console_color2": "0.1.2",
         "apache/log4php": "^2.3"
     },
     "require-dev": {
