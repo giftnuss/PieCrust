@@ -17,7 +17,6 @@ use PieCrust\Util\PieCrustHelper;
 class DirectoryBaker implements IBaker
 {
     protected $pieCrust;
-    protected $logger;
     protected $rootDirLength;
     protected $mountDirLengths;
     protected $tmpDir;
@@ -50,10 +49,15 @@ class DirectoryBaker implements IBaker
     }
     // }}}
 
+    protected function getLog()
+    {
+        return $this->pieCrust->getEnvironment()->getLog();
+    }
+
     /**
      * Creates a new instance of DirectoryBaker.
      */
-    public function __construct(IPieCrust $pieCrust, $bakeDir, array $parameters = array(), $logger = null)
+    public function __construct(IPieCrust $pieCrust, $bakeDir, array $parameters = array())
     {
         $this->pieCrust = $pieCrust;
         $this->tmpDir = $this->pieCrust->isCachingEnabled() ?
@@ -70,11 +74,6 @@ class DirectoryBaker implements IBaker
             ),
             $parameters
         );
-        if ($logger == null)
-        {
-            $logger = \Log::singleton('null', '', '');
-        }
-        $this->logger = $logger;
 
         // Add a special mount point for the theme directory, if any.
         if ($this->pieCrust->getThemeDir())
@@ -127,7 +126,7 @@ class DirectoryBaker implements IBaker
         if ($path == null)
         {
             // Bake everything (root directory and special mount points).
-            $this->logger->debug("Initiating bake on: {$this->pieCrust->getRootDir()}");
+            $this->getLog()->debug("Initiating bake on: {$this->pieCrust->getRootDir()}");
             $this->bakeDirectory(
                 $this->pieCrust->getRootDir(),
                 0,
@@ -136,7 +135,7 @@ class DirectoryBaker implements IBaker
             );
             foreach ($this->parameters['mounts'] as $name => $dir)
             {
-                $this->logger->debug("Initiating bake on: {$dir}");
+                $this->getLog()->debug("Initiating bake on: {$dir}");
                 $this->bakeDirectory($dir, 0, $dir, $this->mountDirLengths[$name]);
             }
         }
@@ -157,12 +156,12 @@ class DirectoryBaker implements IBaker
 
             if (is_dir($path))
             {
-                $this->logger->debug("Initiating bake on: {$rootDir}");
+                $this->getLog()->debug("Initiating bake on: {$rootDir}");
                 $this->bakeDirectory($path, 0, $rootDir, $rootDirLength);
             }
             else if (is_file($path))
             {
-                $this->logger->debug("Initiating bake on: {$rootDir}");
+                $this->getLog()->debug("Initiating bake on: {$rootDir}");
                 $this->bakeFile($path, $rootDir, $rootDirLength);
             }
         }
@@ -194,7 +193,7 @@ class DirectoryBaker implements IBaker
             }
             if ($shouldSkip)
             {
-                $this->logger->debug("Skipping '$relative' [skip_patterns]");
+                $this->getLog()->debug("Skipping '$relative' [skip_patterns]");
                 continue;
             }
 
@@ -254,12 +253,12 @@ class DirectoryBaker implements IBaker
                 'was_baked' => false,
                 'was_overridden' => true
             );
-            $this->logger->info(PieCrustBaker::formatTimed($start, $relative) . ' [not baked, overridden]');
+            $this->getLog()->info(PieCrustBaker::formatTimed($start, $relative) . ' [not baked, overridden]');
             return;
         }
 
         // Get the processing tree for that file.
-        $builder = new ProcessingTreeBuilder($this->getProcessors(), $this->logger);
+        $builder = new ProcessingTreeBuilder($this->getProcessors(), $this->getLog());
         $treeRoot = $builder->build($relative);
 
         // Add an entry in the baked files' metadata.
@@ -306,12 +305,12 @@ class DirectoryBaker implements IBaker
             $rootDir,
             $this->tmpDir,
             $this->bakeDir,
-            $this->logger
+            $this->getLog()
         );
         if ($runner->bakeSubTree($treeRoot))
         {
             $this->bakedFiles[$path]['was_baked'] = true;
-            $this->logger->info(PieCrustBaker::formatTimed($start, $relative));
+            $this->getLog()->info(PieCrustBaker::formatTimed($start, $relative));
         }
     }
 
@@ -326,7 +325,7 @@ class DirectoryBaker implements IBaker
             if ($elapsed > 5)
             {
                 $message = "[{$eventName} for {$proc->getName()}]";
-                $this->logger->info(PieCrustBaker::formatTimed($start, $message));
+                $this->getLog()->info(PieCrustBaker::formatTimed($start, $message));
             }
         }
     }
@@ -359,7 +358,7 @@ class DirectoryBaker implements IBaker
         // Initialize the processors we have left.
         foreach ($this->processors as $proc)
         {
-            $proc->initialize($this->pieCrust, $this->logger);
+            $proc->initialize($this->pieCrust, $this->getLog());
         }
     }
 

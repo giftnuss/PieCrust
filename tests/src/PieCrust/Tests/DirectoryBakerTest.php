@@ -31,7 +31,7 @@ class DirectoryBakerTest extends PieCrustTestCase
             'processors' => array('copy')
         );
         $baker = new DirectoryBaker($pc, $bakeDir, $parameters);
-        
+
         $this->assertEquals(
             array($fs->getRootName() => array(
                 'kitchen' => array(),
@@ -49,14 +49,14 @@ class DirectoryBakerTest extends PieCrustTestCase
         );
         $this->assertEmpty($baker->getBakedFiles());
     }
-    
+
     public function testOneFileBake()
     {
         $fs = MockFileSystem::create(false)
             ->withFile('kitchen/something.html', 'This is some test file.')
             ->withDir('cache')
             ->withDir('counter');
-        
+
         $pc = new MockPieCrust();
         $pc->rootDir = $fs->url('kitchen/');
         $pc->cacheDir = $fs->url('cache/');
@@ -68,7 +68,7 @@ class DirectoryBakerTest extends PieCrustTestCase
             'processors' => array('copy')
         );
         $baker = new DirectoryBaker($pc, $bakeDir, $parameters);
-        
+
         $this->assertEquals(
             array($fs->getRootName() => array(
                 'kitchen' => array(
@@ -105,14 +105,14 @@ class DirectoryBakerTest extends PieCrustTestCase
             $baker->getBakedFiles()
         );
     }
-    
+
     public function testOneFileBakeInsideKitchen()
     {
         $fs = MockFileSystem::create(false)
             ->withDir('kitchen/_counter')
             ->withDir('kitchen/_cache')
             ->withFile('kitchen/something.html', "This is some test file.");
-        
+
         $pc = new MockPieCrust();
         $pc->rootDir = $fs->url('kitchen/');
         $pc->cacheDir = $fs->url('kitchen/_cache/');
@@ -125,7 +125,7 @@ class DirectoryBakerTest extends PieCrustTestCase
             'skip_patterns' => array('/_counter/')
         );
         $baker = new DirectoryBaker($pc, $bakeDir, $parameters);
-        
+
         $this->assertEquals(
             array($fs->getRootName() => array(
                 'kitchen' => array(
@@ -171,7 +171,7 @@ class DirectoryBakerTest extends PieCrustTestCase
             ->withAsset('subdir/_important.html', 'This should not be hidden.')
             ->withDir('_counter')
             ->withDir('_cache');
-        
+
         $pc = new MockPieCrust();
         $pc->rootDir = $fs->url('kitchen/');
         $pc->cacheDir = $fs->url('_cache/');
@@ -184,7 +184,7 @@ class DirectoryBakerTest extends PieCrustTestCase
             'skip_patterns' => array('/^_/')
         );
         $baker = new DirectoryBaker($pc, $bakeDir, $parameters);
-        
+
         $baker->bake();
         $this->assertTrue(is_file($fs->url('_counter/something.html')));
         $this->assertTrue(is_file($fs->url('_counter/subdir/_important.html')));
@@ -227,7 +227,7 @@ class DirectoryBakerTest extends PieCrustTestCase
             'processors' => array('copy')
         );
         $baker = new DirectoryBaker($pc, $bakeDir, $parameters);
-        
+
         $outFile = $fs->url('_counter/something.html');
         $this->assertFalse(is_file($outFile));
         sleep(1);
@@ -289,7 +289,7 @@ class DirectoryBakerTest extends PieCrustTestCase
         $this->assertGreaterThan($mtime, filemtime($outFile));
         $this->assertEquals('New content!', file_get_contents($outFile));
     }
-    
+
     public function testForceBake()
     {
         $fs = MockFileSystem::create(false)
@@ -308,7 +308,7 @@ class DirectoryBakerTest extends PieCrustTestCase
             'force_patterns' => array('/forced/')
         );
         $baker = new DirectoryBaker($pc, $bakeDir, $parameters);
-        
+
         $outFile = $fs->url('_counter/forced.html');
         $this->assertFalse(is_file($outFile));
         $baker->bake();
@@ -357,7 +357,7 @@ class DirectoryBakerTest extends PieCrustTestCase
             'processors' => array('*')
         );
         $baker = new DirectoryBaker($pc, $bakeDir, $parameters);
-        
+
         $outFile = $fs->url('_counter/something.html');
         $this->assertFalse(is_file($outFile));
         $baker->bake();
@@ -435,45 +435,47 @@ class DirectoryBakerTest extends PieCrustTestCase
     public function testThemeMount()
     {
         $fs = MockFileSystem::create()
-            ->withAsset('normal-styles.css', ".rule { color: blue; }")
+            ->withAsset('_content/normal-styles.css', ".rule { color: blue; }")
             ->withAsset('_content/theme/_content/theme_config.yml', '')
-            ->withAsset('_content/theme/theme-styles.css', ".other { color: black; }");
+            ->withAsset('_content/theme/theme-styles.css', ".other { color: black; }")
+            ->withDir('kitchen/_counter');
 
         $app = $fs->getApp();
-        $bakeDir = $fs->url('counter');
+        $bakeDir = $fs->url('kitchen/_counter');
         $baker = new DirectoryBaker($app, $bakeDir);
         $baker->bake();
 
         $this->assertFileEquals(
-            $fs->url('kitchen/normal-styles.css'),
-            $fs->url('counter/normal-styles.css')
+            $fs->url('kitchen/_content/normal-styles.css'),
+            $fs->url('kitchen/_counter/normal-styles.css')
         );
         $this->assertFileEquals(
             $fs->url('kitchen/_content/theme/theme-styles.css'),
-            $fs->url('counter/theme-styles.css')
+            $fs->url('kitchen/_counter/theme-styles.css')
         );
     }
 
     public function testThemeMountOverride()
     {
         $fs = MockFileSystem::create()
-            ->withAsset('normal-styles.css', ".rule { color: blue; }")
-            ->withAsset('extra-styles.css', ".override { color: white; }")
+            ->withAsset('_content/normal-styles.css', ".rule { color: blue; }")
+            ->withAsset('_content/extra-styles.css', ".override { color: white; }")
             ->withAsset('_content/theme/_content/theme_config.yml', '')
-            ->withAsset('_content/theme/extra-styles.css', ".other { color: black; }");
+            ->withAsset('_content/theme/extra-styles.css', ".other { color: black; }")
+            ->withDir('kitchen/_counter');
 
         $app = $fs->getApp();
-        $bakeDir = $fs->url('counter');
+        $bakeDir = $fs->url('kitchen/_counter');
         $baker = new DirectoryBaker($app, $bakeDir);
         $baker->bake();
 
         $this->assertFileEquals(
-            $fs->url('kitchen/normal-styles.css'),
-            $fs->url('counter/normal-styles.css')
+            $fs->url('kitchen/_content/normal-styles.css'),
+            $fs->url('kitchen/_counter/normal-styles.css')
         );
         $this->assertFileEquals(
             $fs->url('kitchen/extra-styles.css'),
-            $fs->url('counter/extra-styles.css')
+            $fs->url('kitchen/_counter/extra-styles.css')
         );
 
         $bakedFiles = $baker->getBakedFiles();

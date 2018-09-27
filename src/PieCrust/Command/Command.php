@@ -34,8 +34,9 @@ class Command
             $userArgv = $getopt->readPHPArgv();
             // `readPHPArgv` returns a `PEAR_Error` (or something like it) if
             // it can't figure out the CLI arguments.
-            if (!is_array($userArgv))
+            if (!is_array($userArgv)) {
                 throw new PieCrustException($userArgv->getMessage());
+            }
             $userArgc = count($userArgv);
         }
 
@@ -87,17 +88,16 @@ class Command
         {
             // The root was given.
             $rootDir = trim($rootDir, " \"");
-            if (!is_dir($rootDir))
+            if (!is_dir($rootDir)) {
                 throw new PieCrustException("The given root directory doesn't exist: " . $rootDir);
+            }
         }
 
         // Build the appropriate app.
-        if ($rootDir == null)
-        {
+        if ($rootDir == null) {
             $pieCrust = new NullPieCrust();
         }
-        else
-        {
+        else {
             $environment = new Environment();
             $pieCrust = new PieCrust(array(
                 'root' => $rootDir,
@@ -108,8 +108,7 @@ class Command
         }
 
         // Pre-load the correct config variant if any was specified.
-        if ($configVariant != null)
-        {
+        if ($configVariant != null) {
             // You can't apply a config variant if there's no website.
             if ($rootDir == null)
             {
@@ -142,19 +141,16 @@ class Command
         }
 
         // Parse the command line.
-        try
-        {
+        try {
             $result = $parser->parse($userArgc, $userArgv);
         }
-        catch (Exception $e)
-        {
+        catch (Exception $e) {
             $parser->displayError($e->getMessage(), false);
             return 3;
         }
 
         // If no command was given, use `help`.
-        if (empty($result->command_name))
-        {
+        if (empty($result->command_name)) {
             $result = $parser->parse(2, array('piecrust', 'help'));
         }
 
@@ -172,16 +168,13 @@ class Command
         {
             if ($command->getName() == $result->command_name)
             {
-                try
-                {
-                    if ($rootDir == null && $command->requiresWebsite())
-                    {
+                try {
+                    if ($rootDir == null && $command->requiresWebsite()) {
                         $cwd = getcwd();
                         throw new PieCrustException("No PieCrust website in '{$cwd}' ('_content/config.yml' not found!).");
                     }
 
-                    if ($debugMode)
-                    {
+                    if ($debugMode) {
                         //$log->debug("PieCrust v." . PieCrustDefaults::VERSION);
                         //$log->debug("  Website: {$rootDir}");
                     }
@@ -194,9 +187,8 @@ class Command
                     $command->run($context);
                     return;
                 }
-                catch (Exception $e)
-                {
-                    $log->exception($e, $debugMode);
+                catch (Exception $e) {
+                    $pieCrust->getEnvironment()->getLog()->fatal($e->getMessage());
                     return 1;
                 }
             }

@@ -2,7 +2,6 @@
 
 namespace PieCrust\Command;
 
-use \Log;
 use \Exception;
 use \Console_CommandLine;
 use \Console_CommandLine_Result;
@@ -54,26 +53,7 @@ class Context
     {
         $this->app = $pieCrust;
         $this->result = $result;
-        //$this->log = $log;
         $this->debuggingEnabled = false;
     }
-/*
-    public function setVerbosity($verbosity)
-    {
-        switch ($verbosity)
-        {
-        case 'debug':
-            $this->log->setChildMask(ChefLog::LOG_CONSOLE, PEAR_LOG_ALL);
-            $this->debuggingEnabled = true;
-            break;
-        case 'quiet':
-            $this->log->setChildMask(ChefLog::LOG_CONSOLE, Log::MAX(PEAR_LOG_WARNING));
-            break;
-        default:
-            $this->log->setChildMask(ChefLog::LOG_CONSOLE, Log::MAX(PEAR_LOG_INFO));
-            break;
-        }
-    }
-    */
 }
 

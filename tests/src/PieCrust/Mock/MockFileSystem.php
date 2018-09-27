@@ -53,7 +53,7 @@ class MockFileSystem
                     $this->root . '/kitchen/_content/config.yml',
                     "site:\n  title: Mock Website"
                 );
-                mkdir($this->root . '/counter');
+                mkdir($this->root . '/_counter');
             }
         }
         else
@@ -67,7 +67,7 @@ class MockFileSystem
                         'config.yml' => "site:\n  title: Mock Website"
                     )
                 );
-                $structure['counter'] = array();
+                $structure['_counter'] = array();
             }
             vfsStream::setup($this->root, null, $structure);
         }

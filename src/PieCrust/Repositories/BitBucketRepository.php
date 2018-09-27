@@ -12,7 +12,7 @@ use PieCrust\Util\PathHelper;
 
 /**
  * A repository hosted on BitBucket, where
- * each plugin is a Mercurial or Git 
+ * each plugin is a Mercurial or Git
  * repository itself.
  */
 class BitBucketRepository implements IRepository
@@ -35,7 +35,7 @@ class BitBucketRepository implements IRepository
             $this->cacheTime = false;
         }
     }
-    
+
     public function supportsSource($source)
     {
         return $this->getUserName($source) !== false;
@@ -90,8 +90,8 @@ class BitBucketRepository implements IRepository
     {
         $matches = array();
         if (!preg_match(
-            ',^https?://(www\.)?bitbucket\.org/(?P<username>[a-z0-9]+)/?,i', 
-            $source, 
+            ',^https?://(www\.)?bitbucket\.org/(?P<username>[a-z0-9]+)/?,i',
+            $source,
             $matches
         ))
         {
@@ -137,7 +137,7 @@ class BitBucketRepository implements IRepository
                 $response = $this->getRequest(strtolower($url));
                 $srcInfo = json_decode($response);
                 if (count(array_filter(
-                        $srcInfo->files, 
+                        $srcInfo->files,
                         function ($f) use ($infoFilename) { return $f->path == $infoFilename; }
                     )) > 0)
                 {

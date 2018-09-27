@@ -24,7 +24,6 @@ class PieCrustBakerTest extends PieCrustTestCase
 
         $structure = $fs->getStructure();
         $counter = $structure[$fs->getRootName()]['kitchen']['_counter'];
-        print_r($counter);
         $this->assertEquals(
             array('index.html'),
             $this->getVfsEntries($counter)
@@ -456,18 +455,18 @@ EOD
         $baker = new PieCrustBaker($app);
         $baker->bake();
 
-        $this->assertFileExists($fs->url('counter/first-page.html'));
-        $this->assertEquals('FIRST', file_get_contents($fs->url('counter/first-page.html')));
-        $this->assertFileExists($fs->url('counter/second-page.html'));
-        $this->assertEquals('SECOND (OVERRIDE)', file_get_contents($fs->url('counter/second-page.html')));
-        $this->assertFileExists($fs->url('counter/theme-page.html'));
-        $this->assertEquals('THEME', file_get_contents($fs->url('counter/theme-page.html')));
-        $this->assertFileExists($fs->url('counter/normal.css'));
-        $this->assertEquals('normal', file_get_contents($fs->url('counter/normal.css')));
-        $this->assertFileExists($fs->url('counter/extra.css'));
-        $this->assertEquals('extra (override)', file_get_contents($fs->url('counter/extra.css')));
-        $this->assertFileExists($fs->url('counter/special.css'));
-        $this->assertEquals('special', file_get_contents($fs->url('counter/special.css')));
+        $this->assertFileExists($fs->url('kitchen/_counter/first-page.html'));
+        $this->assertEquals('FIRST', file_get_contents($fs->url('kitchen/_counter/first-page.html')));
+        $this->assertFileExists($fs->url('kitchen/_counter/second-page.html'));
+        $this->assertEquals('SECOND (OVERRIDE)', file_get_contents($fs->url('kitchen/_counter/second-page.html')));
+        $this->assertFileExists($fs->url('kitchen/_counter/theme-page.html'));
+        $this->assertEquals('THEME', file_get_contents($fs->url('kitchen/_counter/theme-page.html')));
+        $this->assertFileExists($fs->url('kitchen/_counter/normal.css'));
+        $this->assertEquals('normal', file_get_contents($fs->url('kitchen/_counter/normal.css')));
+        $this->assertFileExists($fs->url('kitchen/_counter/extra.css'));
+        $this->assertEquals('extra (override)', file_get_contents($fs->url('kitchen/_counter/extra.css')));
+        $this->assertFileExists($fs->url('kitchen/_counter/special.css'));
+        $this->assertEquals('special', file_get_contents($fs->url('kitchen/_counter/special.css')));
     }
 
     public function bakeTagPagesDataProvider()
@@ -546,30 +545,30 @@ EOD
         );
         sort($tagFileNames);
         $actual = $fs->getStructure();
-        $actual = array_keys($actual[$fs->getRootName()]['counter']['tag']);
+        $actual = array_keys($actual[$fs->getRootName()]['kitchen']['_counter']['tag']);
         sort($actual);
         $this->assertEquals($tagFileNames, $actual);
 
         $this->assertEquals(
             "TAG: {$tag1}\nURI: /tag/{$slug1}.html\nPOST ELEVEN\nPOST TEN\nPOST NINE\n",
-            file_get_contents($fs->url('counter/tag/'.$fileName1.'.html'))
+            file_get_contents($fs->url('kitchen/_counter/tag/'.$fileName1.'.html'))
         );
         $this->assertEquals(
             "TAG: {$tag1}\nURI: /tag/{$slug1}.html\nPOST EIGHT\nPOST SEVEN\nPOST SIX\n",
-            file_get_contents($fs->url('counter/tag/'.$fileName1.'/2.html'))
+            file_get_contents($fs->url('kitchen/_counter/tag/'.$fileName1.'/2.html'))
         );
         $this->assertEquals(
             "TAG: {$tag1}\nURI: /tag/{$slug1}.html\nPOST FIVE\nPOST TWO\nPOST ONE\n",
-            file_get_contents($fs->url('counter/tag/'.$fileName1.'/3.html'))
+            file_get_contents($fs->url('kitchen/_counter/tag/'.$fileName1.'/3.html'))
         );
 
         $this->assertEquals(
             "TAG: {$tag2}\nURI: /tag/{$slug2}.html\nPOST TWELVE\nPOST SIX\nPOST FIVE\n",
-            file_get_contents($fs->url('counter/tag/'.$fileName2.'.html'))
+            file_get_contents($fs->url('kitchen/_counter/tag/'.$fileName2.'.html'))
         );
         $this->assertEquals(
             "TAG: {$tag2}\nURI: /tag/{$slug2}.html\nPOST FOUR\nPOST THREE\n",
-            file_get_contents($fs->url('counter/tag/'.$fileName2.'/2.html'))
+            file_get_contents($fs->url('kitchen/_counter/tag/'.$fileName2.'/2.html'))
         );
     }
 
@@ -608,20 +607,20 @@ EOD
 
         $this->assertEquals(
             "THEME: 1/POST FIVE\nTHEME: 1/POST TWO\nTHEME: 1/POST ONE\n",
-            file_get_contents($fs->url('counter/one/tag/foo.html'))
+            file_get_contents($fs->url('kitchen/_counter/one/tag/foo.html'))
         );
         $this->assertEquals(
             "THEME: 1/POST FIVE\nTHEME: 1/POST FOUR\nTHEME: 1/POST THREE\n",
-            file_get_contents($fs->url('counter/one/tag/bar.html'))
+            file_get_contents($fs->url('kitchen/_counter/one/tag/bar.html'))
         );
 
         $this->assertEquals(
             "THEME: 2/POST FIVE\nTHEME: 2/POST THREE\nTHEME: 2/POST TWO\nTHEME: 2/POST ONE\n",
-            file_get_contents($fs->url('counter/two/tag/foo.html'))
+            file_get_contents($fs->url('kitchen/_counter/two/tag/foo.html'))
         );
         $this->assertEquals(
             "THEME: 2/POST FIVE\nTHEME: 2/POST FOUR\nTHEME: 2/POST TWO\n",
-            file_get_contents($fs->url('counter/two/tag/bar.html'))
+            file_get_contents($fs->url('kitchen/_counter/two/tag/bar.html'))
         );
     }
 
@@ -688,17 +687,17 @@ EOD
         $categoryFileNames = array($fileName1.'.html', $fileName2.'.html');
         sort($categoryFileNames);
         $actual = $fs->getStructure();
-        $actual = array_keys($actual[$fs->getRootName()]['counter']['category']);
+        $actual = array_keys($actual[$fs->getRootName()]['kitchen']['_counter']['category']);
         sort($actual);
         $this->assertEquals($categoryFileNames, $actual);
 
         $this->assertEquals(
             "CATEGORY: {$cat1}\nURI: /category/{$slug1}\nPOST FIVE\nPOST TWO\nPOST ONE\n",
-            file_get_contents($fs->url('counter/category/'.$fileName1.'.html'))
+            file_get_contents($fs->url('kitchen/_counter/category/'.$fileName1.'.html'))
         );
         $this->assertEquals(
             "CATEGORY: {$cat2}\nURI: /category/{$slug2}\nPOST FOUR\nPOST THREE\n",
-            file_get_contents($fs->url('counter/category/'.$fileName2.'.html'))
+            file_get_contents($fs->url('kitchen/_counter/category/'.$fileName2.'.html'))
         );
     }
 
@@ -737,20 +736,20 @@ EOD
 
         $this->assertEquals(
             "THEME: 1/POST FIVE\nTHEME: 1/POST TWO\nTHEME: 1/POST ONE\n",
-            file_get_contents($fs->url('counter/one/foo.html'))
+            file_get_contents($fs->url('kitchen/_counter/one/foo.html'))
         );
         $this->assertEquals(
             "THEME: 1/POST FOUR\nTHEME: 1/POST THREE\n",
-            file_get_contents($fs->url('counter/one/bar.html'))
+            file_get_contents($fs->url('kitchen/_counter/one/bar.html'))
         );
 
         $this->assertEquals(
             "THEME: 2/POST FIVE\nTHEME: 2/POST TWO\nTHEME: 2/POST ONE\n",
-            file_get_contents($fs->url('counter/two/foo.html'))
+            file_get_contents($fs->url('kitchen/_counter/two/foo.html'))
         );
         $this->assertEquals(
             "THEME: 2/POST FOUR\nTHEME: 2/POST THREE\n",
-            file_get_contents($fs->url('counter/two/bar.html'))
+            file_get_contents($fs->url('kitchen/_counter/two/bar.html'))
         );
     }
 
@@ -808,7 +807,7 @@ EOD
 
         $this->assertEquals(
             $expected,
-            file_get_contents($fs->url('counter/foo.html'))
+            file_get_contents($fs->url('kitchen/_counter/foo.html'))
         );
     }
 
@@ -872,7 +871,7 @@ EOD
 
 EOD
             ,
-            file_get_contents($fs->url('counter/archive.html'))
+            file_get_contents($fs->url('kitchen/_counter/archive.html'))
         );
 
         $this->assertEquals(
@@ -894,7 +893,7 @@ EOD
 
 EOD
             ,
-            file_get_contents($fs->url('counter/yearly.html'))
+            file_get_contents($fs->url('kitchen/_counter/yearly.html'))
         );
         $this->assertEquals(
              <<<EOD
@@ -920,7 +919,7 @@ EOD
 
 EOD
             ,
-            file_get_contents($fs->url('counter/monthly.html'))
+            file_get_contents($fs->url('kitchen/_counter/monthly.html'))
         );
     }
 
@@ -997,7 +996,7 @@ EOD
 
 EOD
             ,
-            file_get_contents($fs->url('counter/by_category.html'))
+            file_get_contents($fs->url('kitchen/_counter/by_category.html'))
         );
 
         $this->assertEquals(
@@ -1014,7 +1013,7 @@ EOD
 
 EOD
             ,
-            file_get_contents($fs->url('counter/by_tag.html'))
+            file_get_contents($fs->url('kitchen/_counter/by_tag.html'))
         );
     }
 
@@ -1042,7 +1041,7 @@ EOD
         $baker->bake();
 
         $structure = $fs->getStructure();
-        $counterTag = $structure[$fs->getRootName()]['counter']['tag'];
+        $counterTag = $structure[$fs->getRootName()]['kitchen']['_counter']['tag'];
         $this->assertEquals(
             array('one.html', 'one', 'three.html', 'two.html', 'two'),
             array_keys($counterTag)
@@ -1058,7 +1057,7 @@ EOD
 
         $this->assertEquals(
             "one + two\nPOST TEN\nPOST SEVEN\nPOST FIVE\n",
-            file_get_contents($fs->url('counter/tag/one/two.html'))
+            file_get_contents($fs->url('kitchen/_counter/tag/one/two.html'))
         );
     }
 
@@ -1073,7 +1072,7 @@ EOD
         $baker->bake();
 
         $structure = $fs->getStructure();
-        $counter = $structure[$fs->getRootName()]['counter'];
+        $counter = $structure[$fs->getRootName()]['kitchen']['_counter'];
         $this->assertEquals(
             array('index.html', 'foo.html', 'bar.html'),
             $this->getVfsEntries($counter)
@@ -1085,7 +1084,7 @@ EOD
         $baker->bake();
 
         $structure = $fs->getStructure();
-        $counter = $structure[$fs->getRootName()]['counter'];
+        $counter = $structure[$fs->getRootName()]['kitchen']['_counter'];
         $this->assertEquals(
             array('index.html', 'foo.html'),
             $this->getVfsEntries($counter)
@@ -1129,7 +1128,7 @@ EOD
         $baker->bake();
 
         $structure = $fs->getStructure();
-        $counter = $structure[$fs->getRootName()]['counter'];
+        $counter = $structure[$fs->getRootName()]['kitchen']['_counter'];
         $this->assertEquals(
             array('2010', 'index.html', '2.html', '3.html', 'foo.html', 'foo'),
             $this->getVfsEntries($counter)
@@ -1148,7 +1147,7 @@ EOD
         $baker->bake();
 
         $structure = $fs->getStructure();
-        $counter = $structure[$fs->getRootName()]['counter'];
+        $counter = $structure[$fs->getRootName()]['kitchen']['_counter'];
         $this->assertEquals(
             array('2010', 'index.html', 'foo.html', 'foo'),
             $this->getVfsEntries($counter)
