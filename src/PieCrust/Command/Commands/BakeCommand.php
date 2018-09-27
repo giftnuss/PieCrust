@@ -1,6 +1,6 @@
 <?php
 
-namespace PieCrust\Chef\Commands;
+namespace PieCrust\Command\Commands;
 
 use \Exception;
 use \Console_CommandLine;
@@ -8,16 +8,16 @@ use \Console_CommandLine_Result;
 use PieCrust\IPieCrust;
 use PieCrust\PieCrustException;
 use PieCrust\Baker\PieCrustBaker;
-use PieCrust\Chef\ChefContext;
+use PieCrust\Command\Context;
 
 
-class BakeCommand extends ChefCommand
+class BakeCommand extends Command
 {
     public function getName()
     {
         return 'bake';
     }
-    
+
     public function setupParser(Console_CommandLine $bakerParser, IPieCrust $pieCrust)
     {
         $bakerParser->description = 'Bakes your PieCrust website into a bunch of static HTML files.';
@@ -52,7 +52,7 @@ class BakeCommand extends ChefCommand
         ));
     }
 
-    public function run(ChefContext $context)
+    public function run(Context $context)
     {
         $pieCrust = $context->getApp();
         $result = $context->getResult();

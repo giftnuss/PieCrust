@@ -1,18 +1,18 @@
 <?php
 
-namespace PieCrust\Chef\Commands;
+namespace PieCrust\Command\Commands;
 
 use \Console_CommandLine;
 use \Console_CommandLine_Result;
 use PieCrust\IPieCrust;
-use PieCrust\Chef\ChefContext;
-use PieCrust\Chef\ChefEnvironment;
+use PieCrust\Command\Context;
+use PieCrust\Command\Environment;
 
 
 /**
- * The interface for a PieCrust Chef command.
+ * The interface for piecrust command.
  */
-abstract class ChefCommand
+abstract class Command
 {
     /**
      * Gets the name of the command.
@@ -26,14 +26,14 @@ abstract class ChefCommand
     {
         return true;
     }
-    
+
     /**
      * Creates the command's sub-parser.
      */
     public abstract function setupParser(Console_CommandLine $parser, IPieCrust $pieCrust);
-    
+
     /**
      * Runs the command.
      */
-    public abstract function run(ChefContext $context);
+    public abstract function run(Context $context);
 }

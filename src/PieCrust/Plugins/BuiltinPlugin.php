@@ -68,23 +68,23 @@ class BuiltinPlugin extends PieCrustPlugin
     public function getCommands()
     {
         return array(
-            new \PieCrust\Chef\Commands\HelpCommand(),
-            new \PieCrust\Chef\Commands\BakeCommand(),
-            new \PieCrust\Chef\Commands\CategoriesCommand(),
-            new \PieCrust\Chef\Commands\ImportCommand(),
-            new \PieCrust\Chef\Commands\InitCommand(),
-            new \PieCrust\Chef\Commands\PluginsCommand(),
-            new \PieCrust\Chef\Commands\ThemesCommand(),
-            new \PieCrust\Chef\Commands\ServeCommand(),
-            new \PieCrust\Chef\Commands\RootCommand(),
-            new \PieCrust\Chef\Commands\StatsCommand(),
-            new \PieCrust\Chef\Commands\TagsCommand(),
-            new \PieCrust\Chef\Commands\UploadCommand(),
-            new \PieCrust\Chef\Commands\PurgeCommand(),
-            new \PieCrust\Chef\Commands\PrepareCommand(),
-            new \PieCrust\Chef\Commands\FindCommand(),
-            new \PieCrust\Chef\Commands\ShowConfigCommand(),
-            new \PieCrust\Chef\Commands\SelfUpdateCommand()
+            new \PieCrust\Command\Commands\HelpCommand(),
+            new \PieCrust\Command\Commands\BakeCommand(),
+            new \PieCrust\Command\Commands\CategoriesCommand(),
+            new \PieCrust\Command\Commands\ImportCommand(),
+            new \PieCrust\Command\Commands\InitCommand(),
+            new \PieCrust\Command\Commands\PluginsCommand(),
+            new \PieCrust\Command\Commands\ThemesCommand(),
+            new \PieCrust\Command\Commands\ServeCommand(),
+            new \PieCrust\Command\Commands\RootCommand(),
+            new \PieCrust\Command\Commands\StatsCommand(),
+            new \PieCrust\Command\Commands\TagsCommand(),
+            new \PieCrust\Command\Commands\UploadCommand(),
+            new \PieCrust\Command\Commands\PurgeCommand(),
+            new \PieCrust\Command\Commands\PrepareCommand(),
+            new \PieCrust\Command\Commands\FindCommand(),
+            new \PieCrust\Command\Commands\ShowConfigCommand(),
+            new \PieCrust\Command\Commands\SelfUpdateCommand()
         );
     }
 

@@ -1,16 +1,16 @@
 <?php
 
-namespace PieCrust\Chef\Commands;
+namespace PieCrust\Command\Commands;
 
 use \Console_CommandLine;
 use PieCrust\IPieCrust;
-use PieCrust\Chef\ChefContext;
+use PieCrust\Command\Context;
 
 
 /**
  * The extension to a command, most of the time a sub-command.
  */
-abstract class ChefCommandExtension
+abstract class CommandExtension
 {
     /**
      * Gets the name of the extension.
@@ -25,6 +25,6 @@ abstract class ChefCommandExtension
     /**
      * Runs the command extension.
      */
-    public abstract function run(ChefContext $context);
+    public abstract function run(Context $context);
 }
 

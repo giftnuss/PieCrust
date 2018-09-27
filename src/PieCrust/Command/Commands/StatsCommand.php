@@ -1,31 +1,31 @@
 <?php
 
-namespace PieCrust\Chef\Commands;
+namespace PieCrust\Command\Commands;
 
 use \Console_CommandLine;
 use \Console_CommandLine_Result;
 use PieCrust\IPage;
 use PieCrust\IPieCrust;
 use PieCrust\PieCrustException;
-use PieCrust\Chef\ChefContext;
+use PieCrust\Command\Context;
 use PieCrust\IO\FileSystem;
 use PieCrust\Util\PageHelper;
 use PieCrust\Util\UriBuilder;
 
 
-class StatsCommand extends ChefCommand
+class StatsCommand extends Command
 {
     public function getName()
     {
         return 'stats';
     }
-    
+
     public function setupParser(Console_CommandLine $statsParser, IPieCrust $pieCrust)
     {
         $statsParser->description = "Gets some information about the current website.";
     }
 
-    public function run(ChefContext $context)
+    public function run(Context $context)
     {
         $logger = $context->getLog();
         $pieCrust = $context->getApp();

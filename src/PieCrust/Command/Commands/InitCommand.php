@@ -1,6 +1,6 @@
 <?php
 
-namespace PieCrust\Chef\Commands;
+namespace PieCrust\Command\Commands;
 
 use \Exception;
 use \Console_CommandLine;
@@ -9,11 +9,11 @@ use Symfony\Component\Yaml\Yaml;
 use PieCrust\IPieCrust;
 use PieCrust\PieCrustException;
 use PieCrust\PieCrustDefaults;
-use PieCrust\Chef\ChefContext;
+use PieCrust\Command\Context;
 use PieCrust\Util\PathHelper;
 
 
-class InitCommand extends ChefCommand
+class InitCommand extends Command
 {
     protected $log;
 
@@ -26,7 +26,7 @@ class InitCommand extends ChefCommand
     {
         return false;
     }
-    
+
     public function setupParser(Console_CommandLine $initParser, IPieCrust $pieCrust)
     {
         $initParser->description = "Creates a new empty PieCrust website.";
@@ -49,8 +49,8 @@ class InitCommand extends ChefCommand
             'action'      => 'StoreTrue'
         ));
     }
-    
-    public function run(ChefContext $context)
+
+    public function run(Context $context)
     {
         $this->log = $context->getLog();
         $result = $context->getResult();
@@ -60,7 +60,7 @@ class InitCommand extends ChefCommand
             $rootDir = getcwd();
 
         $this->initializeWebsite(
-            $rootDir, 
+            $rootDir,
             array(
                 'apache' => $result->command->options['apache'],
                 'iis' => $result->command->options['iis']
@@ -92,7 +92,7 @@ class InitCommand extends ChefCommand
         $this->createDirectory($rootDir, PieCrustDefaults::CONTENT_PAGES_DIR);
         $this->createDirectory($rootDir, PieCrustDefaults::CONTENT_POSTS_DIR);
         $this->createDirectory($rootDir, PieCrustDefaults::CONTENT_TEMPLATES_DIR);
-        
+
         // Create the basic files:
         // - config.yml
         $this->createYamlFile($rootDir, PieCrustDefaults::CONFIG_PATH, array(
@@ -120,7 +120,7 @@ class InitCommand extends ChefCommand
         {
             $this->createBootstraper($rootDir);
         }
-        
+
         // All done!
         $this->log->info("PieCrust website created in: " . $rootDir);
         $this->log->info("");
@@ -134,16 +134,16 @@ class InitCommand extends ChefCommand
         }
         else
         {
-            $this->log->info("Run 'chef serve' on this directory to preview it.");
-            $this->log->info("Run 'chef bake' on this directory to generate the static files.");
+            $this->log->info("Run 'piecrust serve' on this directory to preview it.");
+            $this->log->info("Run 'piecrust bake' on this directory to generate the static files.");
         }
     }
-    
+
     protected function createDirectory($rootDir, $dir, $makeWritable = false)
     {
         PathHelper::ensureDirectory($rootDir . $dir, $makeWritable);
     }
-    
+
     protected function createSystemFile($fileName, $rootDir, $destination)
     {
         $source = __DIR__ . '/../../../../res/webinit/' . $fileName;
@@ -151,7 +151,7 @@ class InitCommand extends ChefCommand
         $this->log->debug("Writing '{$destination}'");
         file_put_contents($rootDir . $destination, $contents);
     }
-    
+
     protected function createBootstraper($rootDir)
     {
         $bootstrapCode =
@@ -163,7 +163,7 @@ EOD;
         $this->log->debug("Writing 'index.php'");
         file_put_contents($rootDir . 'index.php', $bootstrapCode);
     }
-    
+
     protected function createYamlFile($rootDir, $destination, $data)
     {
         $contents = Yaml::dump($data, 3);

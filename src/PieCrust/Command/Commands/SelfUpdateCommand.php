@@ -1,16 +1,16 @@
 <?php
 
-namespace PieCrust\Chef\Commands;
+namespace PieCrust\Command\Commands;
 
 use \Phar;
 use \Console_CommandLine;
 use PieCrust\IPieCrust;
 use PieCrust\PieCrustDefaults;
 use PieCrust\PieCrustException;
-use PieCrust\Chef\ChefContext;
+use PieCrust\Command\Context;
 
 
-class SelfUpdateCommand extends ChefCommand
+class SelfUpdateCommand extends Command
 {
     public function getName()
     {
@@ -39,7 +39,7 @@ class SelfUpdateCommand extends ChefCommand
         ));
     }
 
-    public function run(ChefContext $context)
+    public function run(Context $context)
     {
         $app = $context->getApp();
         $result = $context->getResult();

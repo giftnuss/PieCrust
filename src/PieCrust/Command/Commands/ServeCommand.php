@@ -1,23 +1,23 @@
 <?php
 
-namespace PieCrust\Chef\Commands;
+namespace PieCrust\Command\Commands;
 
 use \Exception;
 use \Console_CommandLine;
 use \Console_CommandLine_Result;
 use PieCrust\IPieCrust;
 use PieCrust\PieCrustException;
-use PieCrust\Chef\ChefContext;
+use PieCrust\Command\Context;
 use PieCrust\Server\PieCrustServer;
 
 
-class ServeCommand extends ChefCommand
+class ServeCommand extends Command
 {
     public function getName()
     {
         return 'serve';
     }
-    
+
     public function setupParser(Console_CommandLine $serverParser, IPieCrust $pieCrust)
     {
         $serverParser->description = 'Serves your PieCrust website using a tiny development web server.';
@@ -71,7 +71,7 @@ class ServeCommand extends ChefCommand
         ));
     }
 
-    public function run(ChefContext $context)
+    public function run(Context $context)
     {
         $result = $context->getResult();
 

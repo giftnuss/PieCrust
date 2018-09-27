@@ -1,18 +1,18 @@
 <?php
 
-namespace PieCrust\Chef\Commands;
+namespace PieCrust\Command\Commands;
 
 use \Exception;
 use \Console_CommandLine;
 use PieCrust\IPieCrust;
 use PieCrust\PieCrustDefaults;
 use PieCrust\PieCrustException;
-use PieCrust\Chef\ChefContext;
+use PieCrust\Command\Context;
 use PieCrust\IO\FileSystem;
 use PieCrust\Util\PieCrustHelper;
 
 
-class PrepareFeedCommandExtension extends ChefCommandExtension
+class PrepareFeedCommandExtension extends CommandExtension
 {
     public function getName()
     {
@@ -35,7 +35,7 @@ class PrepareFeedCommandExtension extends ChefCommandExtension
         ));
     }
 
-    public function run(ChefContext $context)
+    public function run(Context $context)
     {
         $result = $context->getResult();
         $app = $context->getApp();

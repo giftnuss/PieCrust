@@ -1,25 +1,25 @@
 <?php
 
-namespace PieCrust\Chef\Commands;
+namespace PieCrust\Command\Commands;
 
 use \Console_CommandLine;
 use \Console_CommandLine_Result;
 use PieCrust\IPieCrust;
 use PieCrust\PieCrustDefaults;
 use PieCrust\PieCrustException;
-use PieCrust\Chef\ChefContext;
+use PieCrust\Command\Context;
 use PieCrust\Repositories\PluginInstallContext;
 use PieCrust\Util\PathHelper;
 use PieCrust\Util\PieCrustHelper;
 
 
-class PluginsCommand extends ChefCommand
+class PluginsCommand extends Command
 {
     public function getName()
     {
         return 'plugins';
     }
-    
+
     public function setupParser(Console_CommandLine $parser, IPieCrust $pieCrust)
     {
         $parser->description = "Gets the list of plugins currently loaded, or install new ones.";
@@ -56,7 +56,7 @@ class PluginsCommand extends ChefCommand
         ));
     }
 
-    public function installPlugin($pluginName, ChefContext $context)
+    public function installPlugin($pluginName, Context $context)
     {
         $app = $context->getApp();
         $log = $context->getLog();
@@ -76,7 +76,7 @@ class PluginsCommand extends ChefCommand
         return $plugin;
     }
 
-    public function run(ChefContext $context)
+    public function run(Context $context)
     {
         $result = $context->getResult();
 
@@ -92,7 +92,7 @@ class PluginsCommand extends ChefCommand
         throw new PieCrustException("Unknown action '{$action}'.");
     }
 
-    protected function listPlugins(ChefContext $context)
+    protected function listPlugins(Context $context)
     {
         $app = $context->getApp();
         $log = $context->getLog();
@@ -110,7 +110,7 @@ class PluginsCommand extends ChefCommand
         }
     }
 
-    protected function findPlugins(ChefContext $context)
+    protected function findPlugins(Context $context)
     {
         $app = $context->getApp();
         $log = $context->getLog();
@@ -125,7 +125,7 @@ class PluginsCommand extends ChefCommand
         }
     }
 
-    protected function installPlugins(ChefContext $context)
+    protected function installPlugins(Context $context)
     {
         $log = $context->getLog();
         $result = $context->getResult();
@@ -134,7 +134,7 @@ class PluginsCommand extends ChefCommand
         $log->info("Plugin {$plugin['name']} is now installed.");
     }
 
-    protected function updatePlugins(ChefContext $context)
+    protected function updatePlugins(Context $context)
     {
         $app = $context->getApp();
         $log = $context->getLog();

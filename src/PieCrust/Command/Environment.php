@@ -1,7 +1,8 @@
 <?php
 
-namespace PieCrust\Chef;
+namespace PieCrust\Command;
 
+use Logger;
 use PieCrust\Environment\CachedEnvironment;
 
 
@@ -9,13 +10,8 @@ use PieCrust\Environment\CachedEnvironment;
  * An environment that runs under a `Chef` instance in
  * command line.
  */
-class ChefEnvironment extends CachedEnvironment
+class Environment extends CachedEnvironment
 {
-    public function setLog($logger)
-    {
-        $this->logger = $logger;
-    }
-
     protected $commandExtensions;
     /**
      * Gets the command extensions.
@@ -39,11 +35,14 @@ class ChefEnvironment extends CachedEnvironment
     }
 
     /**
-     * Creates a new instance of `ChefEnvironment`.
+     * Creates a new instance of command `environment`.
      */
-    public function __construct()
+    public function __construct($logger=null)
     {
-        parent::__construct();
+        if($logger === null) {
+            $logger = Logger::getLogger('piecrust');
+        }
+        parent::__construct($logger);
     }
 }
 

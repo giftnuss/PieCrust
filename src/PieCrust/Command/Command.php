@@ -11,7 +11,7 @@ use PieCrust\Util\PathHelper;
 
 
 /**
- * The PieCrust Chef application.
+ * The piecrust command line application.
  */
 class Command
 {
@@ -23,57 +23,9 @@ class Command
     }
 
     /**
-     * Runs Chef given some command-line arguments.
+     * Runs piecrust given some command-line arguments.
      */
     public function run($userArgc = null, $userArgv = null)
-    {
-        try {
-            return $this->runUnsafe($userArgc, $userArgv);
-        }
-        catch (Exception $e)
-        {
-            echo "Fatal Error: " . $e->getMessage() . PHP_EOL;
-
-            // Do some poor man's parsing, because at this point, anything
-            // could be fucked up.
-            if (!$userArgv)
-            {
-                $userArgv = $_SERVER['argv'];
-            }
-            if (in_array('--debug', $userArgv))
-            {
-                echo $e->getFile() . ":" . $e->getLine() . PHP_EOL;
-                echo $e->getTraceAsString() . PHP_EOL;
-                $e = $e->getPrevious();
-                while ($e)
-                {
-                    echo PHP_EOL;
-                    echo $e->getMessage() . PHP_EOL;
-                    echo $e->getFile() . ":" . $e->getLine() . PHP_EOL;
-                    echo $e->getTraceAsString() . PHP_EOL;
-                    $e = $e->getPrevious();
-                }
-            }
-            else
-            {
-                echo PHP_EOL;
-                echo "More error details follow:" . PHP_EOL;
-                $e = $e->getPrevious();
-                while ($e)
-                {
-                    echo PHP_EOL;
-                    echo $e->getMessage() . PHP_EOL;
-                    $e = $e->getPrevious();
-                }
-            }
-            return 2;
-        }
-    }
-
-    /**
-     * Runs Chef given some command-line arguments.
-     */
-    public function runUnsafe($userArgc = null, $userArgv = null)
     {
         // Get the arguments.
         if ($userArgc == null || $userArgv == null)
@@ -146,7 +98,7 @@ class Command
         }
         else
         {
-            $environment = new ChefEnvironment();
+            $environment = new Environment();
             $pieCrust = new PieCrust(array(
                 'root' => $rootDir,
                 'cache' => !in_array('--no-cache', $userArgv),
@@ -171,11 +123,11 @@ class Command
 
         // Set up the command line parser.
         $parser = new \Console_CommandLine(array(
-            'name' => 'chef',
-            'description' => 'The PieCrust chef manages your website.',
+            'name' => 'piecrust',
+            'description' => 'The piecrust command manages your website.',
             'version' => PieCrustDefaults::VERSION
         ));
-        $parser->renderer = new ChefCommandLineRenderer($parser);
+        $parser->renderer = new CommandLineRenderer($parser);
         $this->addCommonOptionsAndArguments($parser);
         // Sort commands by name.
         $sortedCommands = $pieCrust->getPluginLoader()->getCommands();
@@ -203,7 +155,7 @@ class Command
         // If no command was given, use `help`.
         if (empty($result->command_name))
         {
-            $result = $parser->parse(2, array('chef', 'help'));
+            $result = $parser->parse(2, array('piecrust', 'help'));
         }
 
         // Create the log.
@@ -214,19 +166,6 @@ class Command
             $parser->displayError("You can't specify both --debug and --quiet.", false);
             return 1;
         }
-        $log = new ChefLog('Chef');
-        // Log to a file.
-        if ($result->options['log'])
-        {
-            $log->addFileLog($result->options['log']);
-        }
-        // Make the log available to PieCrust.
-        if ($rootDir != null)
-        {
-            $environment->setLog($log);
-        }
-        // Make the log available for debugging purposes.
-        $GLOBALS['__CHEF_LOG'] = $log;
 
         // Run the command.
         foreach ($pieCrust->getPluginLoader()->getCommands() as $command)
@@ -243,15 +182,15 @@ class Command
 
                     if ($debugMode)
                     {
-                        $log->debug("PieCrust v." . PieCrustDefaults::VERSION);
-                        $log->debug("  Website: {$rootDir}");
+                        //$log->debug("PieCrust v." . PieCrustDefaults::VERSION);
+                        //$log->debug("  Website: {$rootDir}");
                     }
 
-                    $context = new ChefContext($pieCrust, $result, $log);
-                    $context->setVerbosity($debugMode ?
+                    $context = new Context($pieCrust, $result);
+                    /*$context->setVerbosity($debugMode ?
                         'debug' :
                         ($quietMode ? 'quiet' : 'default')
-                    );
+                    );*/
                     $command->run($context);
                     return;
                 }

@@ -1,23 +1,23 @@
 <?php
 
-namespace PieCrust\Chef\Commands;
+namespace PieCrust\Command\Commands;
 
 use \Exception;
 use \Console_CommandLine;
 use \Console_CommandLine_Result;
 use PieCrust\IPieCrust;
 use PieCrust\PieCrustException;
-use PieCrust\Chef\ChefContext;
+use PieCrust\Command\Context;
 use PieCrust\Interop\PieCrustImporter;
 
 
-class ImportCommand extends ChefCommand
+class ImportCommand extends Command
 {
     public function getName()
     {
         return 'import';
     }
-    
+
     public function setupParser(Console_CommandLine $importParser, IPieCrust $pieCrust)
     {
         $importParser->description = 'Imports content from another CMS into PieCrust.';
@@ -52,8 +52,8 @@ class ImportCommand extends ChefCommand
         $helpParser = $importParser->parent->commands['help'];
         $helpParser->helpTopics['about-import'] = self::aboutImportHelpTopic($pieCrust);
     }
-    
-    public function run(ChefContext $context)
+
+    public function run(Context $context)
     {
         $result = $context->getResult();
 
@@ -65,7 +65,7 @@ class ImportCommand extends ChefCommand
             // Warning for the old syntax.
             throw new PieCrustException("The syntax for this command has changed: specify the format and the source as arguments. See `chef import -h` for help.");
         }
-        
+
         // Start importing!
         $importer = new PieCrustImporter($context->getApp(), $context->getLog());
         $importer->import($format, $source, $result->command->options);

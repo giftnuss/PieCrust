@@ -1,19 +1,19 @@
 <?php
 
-namespace PieCrust\Chef\Commands;
+namespace PieCrust\Command\Commands;
 
 use \Console_CommandLine;
 use PieCrust\IPieCrust;
-use PieCrust\Chef\ChefContext;
+use PieCrust\Command\Context;
 
 
-class ShowConfigCommand extends ChefCommand
+class ShowConfigCommand extends Command
 {
     public function getName()
     {
         return 'showconfig';
     }
-    
+
     public function setupParser(Console_CommandLine $parser, IPieCrust $pieCrust)
     {
         $parser->description = "Prints part of, or the entirety of, the website's configuration.";
@@ -24,7 +24,7 @@ class ShowConfigCommand extends ChefCommand
         ));
     }
 
-    public function run(ChefContext $context)
+    public function run(Context $context)
     {
         $logger = $context->getLog();
         $pieCrust = $context->getApp();

@@ -44,7 +44,7 @@ require PHPUNIT_COMPOSER_INSTALL;
 error_reporting(E_ALL & ~E_DEPRECATED & ~E_NOTICE & ~E_STRICT);
 
 try {
-   $returnCode = piecrust_chef();
+   $returnCode = piecrust_command();
 } catch ( Exception $e ) {
     fwrite(STDERR, $e->getMessage() . PHP_EOL . $e->getTraceAsString());
     die(2);
@@ -189,10 +189,10 @@ function piecrust_run($parameters = array(), $uri = null, $profile = 'web')
 /**
  * Setups and runs a new instance of Chef.
  */
-function piecrust_chef($userArgc = null, $userArgv = null, $profile = 'chef')
+function piecrust_command($userArgc = null, $userArgv = null, $profile = 'chef')
 {
     piecrust_setup($profile);
 
-    $chef = new PieCrust\Chef\Chef();
+    $chef = new PieCrust\Command\Command();
     return $chef->run($userArgc, $userArgv);
 }

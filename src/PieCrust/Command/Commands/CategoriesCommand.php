@@ -1,23 +1,23 @@
 <?php
 
-namespace PieCrust\Chef\Commands;
+namespace PieCrust\Command\Commands;
 
 use \Console_CommandLine;
 use \Console_CommandLine_Result;
 use PieCrust\IPage;
 use PieCrust\IPieCrust;
 use PieCrust\PieCrustException;
-use PieCrust\Chef\ChefContext;
+use PieCrust\Command\Context;
 use PieCrust\Util\PageHelper;
 
 
-class CategoriesCommand extends ChefCommand
+class CategoriesCommand extends Command
 {
     public function getName()
     {
         return 'categories';
     }
-    
+
     public function setupParser(Console_CommandLine $parser, IPieCrust $pieCrust)
     {
         $parser->description = "Gets the list of categories used in the website.";
@@ -55,7 +55,7 @@ class CategoriesCommand extends ChefCommand
         ));
     }
 
-    public function run(ChefContext $context)
+    public function run(Context $context)
     {
         $logger = $context->getLog();
         $pieCrust = $context->getApp();

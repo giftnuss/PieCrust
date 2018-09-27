@@ -1,11 +1,11 @@
 <?php
 
-namespace PieCrust\Chef;
+namespace PieCrust\Command;
 
 use \Phar;
 
 
-class ChefCommandLineRenderer extends \Console_CommandLine_Renderer_Default
+class CommandLineRenderer extends \Console_CommandLine_Renderer_Default
 {
     public function __construct($parser = false)
     {

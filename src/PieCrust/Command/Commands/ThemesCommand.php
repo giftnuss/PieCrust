@@ -1,6 +1,6 @@
 <?php
 
-namespace PieCrust\Chef\Commands;
+namespace PieCrust\Command\Commands;
 
 use \Exception;
 use \Console_CommandLine;
@@ -8,13 +8,13 @@ use \Console_CommandLine_Result;
 use Symfony\Component\Yaml\Yaml;
 use PieCrust\IPieCrust;
 use PieCrust\PieCrustException;
-use PieCrust\Chef\ChefContext;
-use PieCrust\Chef\Commands\PluginsCommand;
+use PieCrust\Command\Context;
+use PieCrust\Command\Commands\PluginsCommand;
 use PieCrust\Repositories\ThemeInstallContext;
 use PieCrust\Util\PieCrustHelper;
 
 
-class ThemesCommand extends ChefCommand
+class ThemesCommand extends Command
 {
     public function getName()
     {
@@ -24,7 +24,7 @@ class ThemesCommand extends ChefCommand
     public function setupParser(Console_CommandLine $parser, IPieCrust $pieCrust)
     {
         $parser->description = "Manages themes for your PieCrust website.";
- 
+
         $listParser = $parser->addCommand('info', array(
             'description' => "Shows info about the currently installed theme."
         ));
@@ -48,7 +48,7 @@ class ThemesCommand extends ChefCommand
         ));
     }
 
-    public function run(ChefContext $context)
+    public function run(Context $context)
     {
         $result = $context->getResult();
 
@@ -64,7 +64,7 @@ class ThemesCommand extends ChefCommand
         throw new PieCrustException("Unknown action '{$action}'.");
     }
 
-    protected function infoThemes(ChefContext $context)
+    protected function infoThemes(Context $context)
     {
         $app = $context->getApp();
         $log = $context->getLog();
@@ -85,7 +85,7 @@ class ThemesCommand extends ChefCommand
         $log->info($themeInfo['name'] . ': ' . $themeInfo['description']);
     }
 
-    protected function findThemes(ChefContext $context)
+    protected function findThemes(Context $context)
     {
         $app = $context->getApp();
         $log = $context->getLog();
@@ -100,7 +100,7 @@ class ThemesCommand extends ChefCommand
         }
     }
 
-    protected function installThemes(ChefContext $context)
+    protected function installThemes(Context $context)
     {
         $app = $context->getApp();
         $log = $context->getLog();
@@ -183,7 +183,7 @@ class ThemesCommand extends ChefCommand
         return $metadata;
     }
 
-    protected function installRequirements(array $theme, ChefContext $context)
+    protected function installRequirements(array $theme, Context $context)
     {
         if (!isset($theme['requires']))
             return;

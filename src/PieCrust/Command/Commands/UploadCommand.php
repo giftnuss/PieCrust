@@ -1,13 +1,13 @@
 <?php
 
-namespace PieCrust\Chef\Commands;
+namespace PieCrust\Command\Commands;
 
 use \Exception;
 use \Console_CommandLine;
 use \Console_CommandLine_Result;
 use PieCrust\IPieCrust;
 use PieCrust\PieCrustException;
-use PieCrust\Chef\ChefContext;
+use PieCrust\Command\Context;
 
 
 define('FTP_SYNC_ALWAYS', 0);
@@ -24,13 +24,13 @@ $TEXT_FILE_NAMES = array(
 );
 
 
-class UploadCommand extends ChefCommand
+class UploadCommand extends Command
 {
     public function getName()
     {
         return 'upload';
     }
-    
+
     public function setupParser(Console_CommandLine $uploadParser, IPieCrust $pieCrust)
     {
         $uploadParser->description = 'Uploads your PieCrust website to a given FTP server.';
@@ -72,7 +72,7 @@ class UploadCommand extends ChefCommand
         ));
     }
 
-    public function run(ChefContext $context)
+    public function run(Context $context)
     {
         $result = $context->getResult();
         $log = $context->getLog();
@@ -87,16 +87,16 @@ class UploadCommand extends ChefCommand
         $user = $matches[1];
         $password = $matches[3];
         $server = $matches[4];
-        
+
         $remoteRootDir = $result->command->options['remote_root'];
         if (!$remoteRootDir)
         {
             $remoteRootDir = '/';
         }
         $remoteRootDir = rtrim($remoteRootDir, '/\\') . '/';
-        
+
         $passiveMode = $result->command->options['passive'];
-        
+
         $syncMode = FTP_SYNC_ALWAYS;
         switch ($result->command->options['sync_mode'])
         {
@@ -107,11 +107,11 @@ class UploadCommand extends ChefCommand
                 $syncMode = FTP_SYNC_IF_NEWER_OR_DIFFERENT_SIZE;
                 break;
         }
-        
+
         $simulate = $result->command->options['simulate'];
-        
+
         $log->info("Uploading to '{$server}' [{$remoteRootDir}] as {$user}");
-        
+
         $conn = ftp_connect($server);
         if ($conn === false)
         {
@@ -121,7 +121,7 @@ class UploadCommand extends ChefCommand
         {
             $password = prompt_silent("Password: ");
         }
-        
+
         // Start uploading!
         try
         {
@@ -153,7 +153,7 @@ class UploadCommand extends ChefCommand
     {
         global $TEXT_FILE_NAMES;
         global $TEXT_FILE_EXTENSIONS;
-        
+
         $localRootSize = strlen($localRoot);
         $it = new RecursiveDirectoryIterator($localRoot);
         $itIt = new RecursiveIteratorIterator($it);
@@ -161,7 +161,7 @@ class UploadCommand extends ChefCommand
         {
             $relativePathname = str_replace('\\', '/', ltrim(substr($cur->getPathname(), $localRootSize), DIRECTORY_SEPARATOR));
             $remotePathname = $remoteRoot . $relativePathname;
-            
+
             $transferMode = FTP_BINARY;
             $relativePathInfo = pathinfo($relativePathname);
             if ((array_key_exists('extension', $relativePathInfo) and in_array($relativePathInfo['extension'], $TEXT_FILE_EXTENSIONS)) or
@@ -169,7 +169,7 @@ class UploadCommand extends ChefCommand
             {
                 $transferMode = FTP_ASCII;
             }
-            
+
             $doTransfer = false;
             $doTransferReason = "";
             if ($mode == FTP_SYNC_ALWAYS)
@@ -191,14 +191,14 @@ class UploadCommand extends ChefCommand
                     $doTransfer = true;
                     $doTransferReason = "newer";
                 }
-                
+
                 if ($doTransfer and $doTransferReason == "newer" and $mode == FTP_SYNC_IF_NEWER_OR_DIFFERENT_SIZE)
                 {
                     if ($transferMode == FTP_BINARY)
                         $localSize = $cur->getSize();
                     else
                         $localSize = get_unix_ascii_size($cur->getPathname());
-                        
+
                     $remoteSize = ftp_size($conn, $remotePathname);
                     if ($remoteSize != -1 and $remoteSize != $localSize)
                     {
@@ -219,14 +219,14 @@ class UploadCommand extends ChefCommand
             }
         }
     }
-    
+
     function get_unix_ascii_size($path)
     {
         $text = file_get_contents($path);
         $text = str_replace("\r\n", "\n", $text);
         return strlen($text);
     }
-    
+
     function prompt_silent($prompt)
     {
         if (preg_match('/^win/i', PHP_OS))

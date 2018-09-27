@@ -1,13 +1,13 @@
 <?php
 
-namespace PieCrust\Chef\Commands;
+namespace PieCrust\Command\Commands;
 
 use \Console_CommandLine;
 use PieCrust\IPage;
 use PieCrust\IPieCrust;
 use PieCrust\PieCrustDefaults;
 use PieCrust\PieCrustException;
-use PieCrust\Chef\ChefContext;
+use PieCrust\Command\Context;
 use PieCrust\IO\FileSystem;
 use PieCrust\Page\Iteration\DateSortIterator;
 use PieCrust\Util\PageHelper;
@@ -16,13 +16,13 @@ use PieCrust\Util\PieCrustHelper;
 use PieCrust\Util\UriBuilder;
 
 
-class FindCommand extends ChefCommand
+class FindCommand extends Command
 {
     public function getName()
     {
         return 'find';
     }
-    
+
     public function setupParser(Console_CommandLine $parser, IPieCrust $pieCrust)
     {
         $parser->description = "Find all pages, posts and templates in the website, with optional filtering features.";
@@ -82,7 +82,7 @@ class FindCommand extends ChefCommand
         ));
     }
 
-    public function run(ChefContext $context)
+    public function run(Context $context)
     {
         $logger = $context->getLog();
         $pieCrust = $context->getApp();

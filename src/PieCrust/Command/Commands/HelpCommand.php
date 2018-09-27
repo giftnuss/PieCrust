@@ -1,15 +1,15 @@
 <?php
 
-namespace PieCrust\Chef\Commands;
+namespace PieCrust\Command\Commands;
 
 use \Console_CommandLine;
 use \Console_CommandLine_Result;
 use PieCrust\IPieCrust;
 use PieCrust\PieCrustException;
-use PieCrust\Chef\ChefContext;
+use PieCrust\Command\Context;
 
 
-class HelpCommand extends ChefCommand
+class HelpCommand extends Command
 {
     protected $parser;
 
@@ -22,7 +22,7 @@ class HelpCommand extends ChefCommand
     {
         return false;
     }
-    
+
     public function setupParser(Console_CommandLine $helpParser, IPieCrust $pieCrust)
     {
         $helpParser->description = "Gets help on chef.";
@@ -37,7 +37,7 @@ class HelpCommand extends ChefCommand
         $this->parser = $helpParser;
     }
 
-    public function run(ChefContext $context)
+    public function run(Context $context)
     {
         $result = $context->getResult();
 

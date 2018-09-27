@@ -1,6 +1,6 @@
 <?php
 
-namespace PieCrust\Chef;
+namespace PieCrust\Command;
 
 use \Log;
 use \Exception;
@@ -11,9 +11,9 @@ use PieCrust\PieCrustException;
 
 
 /*
- * The context for a `chef` command.
+ * The context for `piecrust` command.
  */
-class ChefContext
+class Context
 {
     protected $app;
     /**
@@ -33,13 +33,12 @@ class ChefContext
         return $this->result;
     }
 
-    protected $log;
     /**
      * Returns the logger.
      */
     public function getLog()
     {
-        return $this->log;
+        return $this->getApp()->getEnvironment()->getLog();
     }
 
     protected $debuggingEnabled;
@@ -51,14 +50,14 @@ class ChefContext
         return $this->debuggingEnabled;
     }
 
-    public function __construct(IPieCrust $pieCrust, Console_CommandLine_Result $result, Log $log)
+    public function __construct(IPieCrust $pieCrust, Console_CommandLine_Result $result)
     {
         $this->app = $pieCrust;
         $this->result = $result;
-        $this->log = $log;
+        //$this->log = $log;
         $this->debuggingEnabled = false;
     }
-
+/*
     public function setVerbosity($verbosity)
     {
         switch ($verbosity)
@@ -75,5 +74,6 @@ class ChefContext
             break;
         }
     }
+    */
 }
 
