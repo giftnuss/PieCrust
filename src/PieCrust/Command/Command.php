@@ -95,7 +95,7 @@ class Command
 
         // Build the appropriate app.
         if ($rootDir == null) {
-            $pieCrust = new NullPieCrust();
+            throw new PieCrustException("There was no root dir given.");
         }
         else {
             $environment = new Environment();
