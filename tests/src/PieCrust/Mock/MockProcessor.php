@@ -4,11 +4,12 @@ namespace PieCrust\Mock;
 
 use PieCrust\IPieCrust;
 use PieCrust\Baker\IBaker;
+use PieCrust\Baker\Processors\BaseProcessor;
 use PieCrust\Baker\Processors\IProcessor;
 use PieCrust\PieCrustConfiguration;
 
 
-class MockProcessor implements IProcessor
+class MockProcessor extends BaseProcessor implements IProcessor
 {
     public $name;
     public $priority;
@@ -31,10 +32,6 @@ class MockProcessor implements IProcessor
         return $this->name;
     }
 
-    public function initialize(IPieCrust $pieCrust, $logger = null)
-    {
-    }
-
     public function getPriority()
     {
         return $this->priority;
@@ -53,7 +50,7 @@ class MockProcessor implements IProcessor
     {
         return false;
     }
-    
+
     public function isDelegatingDependencyCheck()
     {
         return true;

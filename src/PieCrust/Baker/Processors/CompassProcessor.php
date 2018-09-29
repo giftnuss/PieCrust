@@ -7,10 +7,9 @@ use PieCrust\PieCrustException;
 use PieCrust\Baker\IBaker;
 
 
-class CompassProcessor implements IProcessor
+class CompassProcessor extends BaseProcessor implements IProcessor
 {
     protected $pieCrust;
-    protected $logger;
     protected $baker;
 
     protected $initialized;
@@ -29,15 +28,6 @@ class CompassProcessor implements IProcessor
     public function getName()
     {
         return 'compass';
-    }
-    
-    public function initialize(IPieCrust $pieCrust, $logger = null)
-    {
-        $this->pieCrust = $pieCrust;
-
-        if ($logger == null)
-            $logger = \Log::singleton('null', '', '');
-        $this->logger = $logger;
     }
 
     public function getPriority()
@@ -90,14 +80,16 @@ class CompassProcessor implements IProcessor
         $themeDir = $this->pieCrust->getThemeDir();
         if ($themeDir && strncmp($inputPath, $themeDir, count($themeDir)))
         {
-            if (!$this->needsRunningInTheme)
-                $this->logger->debug("Scheduling Compass execution in theme directory after the bake.");
+            if (!$this->needsRunningInTheme) {
+                $this->getLog()->debug("Scheduling Compass execution in theme directory after the bake.");
+            }
             $this->needsRunningInTheme = true;
         }
         else
         {
-            if (!$this->needsRunning)
-                $this->logger->debug("Scheduling Compass execution after the bake.");
+            if (!$this->needsRunning) {
+                $this->getLog()->debug("Scheduling Compass execution after the bake.");
+            }
             $this->needsRunning = true;
         }
     }
@@ -134,8 +126,8 @@ class CompassProcessor implements IProcessor
             $cssDir = $this->baker->getBakeDir() . 'stylesheets';
 
             $cmd = "{$exePath} compile --css-dir=\"{$cssDir}\" {$this->options}";
-            $this->logger->debug("Running Compass in '{$dir}'");
-            $this->logger->debug('$> '.$cmd);
+            $this->getLog()->debug("Running Compass in '{$dir}'");
+            $this->getLog()->debug('$> '.$cmd);
 
             $cwd = getcwd();
             chdir($dir);
@@ -159,7 +151,7 @@ class CompassProcessor implements IProcessor
             return;
         }
 
-        $this->logger->debug("Will use Compass for processing SCSS/SASS files.");
+        $this->getLog()->debug("Will use Compass for processing SCSS/SASS files.");
 
         // Get the compass binary location, if any.
         $this->binDir = $config->getValue('compass/bin_dir');
@@ -219,7 +211,7 @@ class CompassProcessor implements IProcessor
 
     protected function autoGenConfig($configPath)
     {
-        $this->logger->debug("Generating Compass config file at: {$configPath}");
+        $this->getLog()->debug("Generating Compass config file at: {$configPath}");
 
         $configContents = '';
         $config = $this->pieCrust->getConfig();

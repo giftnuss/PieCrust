@@ -16,17 +16,22 @@ interface IProcessor
     const PRIORITY_DEFAULT = 0;
     const PRIORITY_LOW = -1;
     /// }}}
-    
+
     /**
      * Gets the name of the processor, for enabling/disabling from the app configuration.
      */
     public function getName();
-    
+
     /**
      * Initializes a file processor with the given PieCrust instance.
      */
-    public function initialize(IPieCrust $pieCrust, $logger = null);
-    
+    public function initialize(IPieCrust $pieCrust);
+
+    /**
+     * Get the system log object.
+     */
+    public function getLog();
+
     /**
      * Gets the priority of this processor.
      *
@@ -39,7 +44,7 @@ interface IProcessor
      * Gets called before baking the site.
      */
     public function onBakeStart(IBaker $baker);
-    
+
     /**
      * Returns whether this processor should process a file with the given
      * extension.
@@ -55,8 +60,8 @@ interface IProcessor
     public function isBypassingStructuredProcessing();
 
     /**
-     * Returns `true` if PieCrust should handle dependency checking with 
-     * `getDependencies`, and `false` if the processor handles its own 
+     * Returns `true` if PieCrust should handle dependency checking with
+     * `getDependencies`, and `false` if the processor handles its own
      * dependency checks.
      */
     public function isDelegatingDependencyCheck();
@@ -65,12 +70,12 @@ interface IProcessor
      * Gets zero or more input dependency file names for the given input file.
      */
     public function getDependencies($path);
-    
+
     /**
      * Gets one or more output file names for the given input file.
      */
     public function getOutputFilenames($filename);
-    
+
     /**
      * Processes the given input file. The resulting, processed file should be
      * placed in the given output directory.

@@ -18,11 +18,10 @@ use PieCrust\IO\Cache;
  * Look at the LessProcessor or SassProcessor classes for examples
  * of how to use this class.
  */
-class SimpleFileProcessor implements IProcessor
+class SimpleFileProcessor extends BaseProcessor implements IProcessor
 {
     protected $pieCrust;
     protected $baker;
-    protected $logger;
 
     protected $name;
     protected $priority;
@@ -30,7 +29,7 @@ class SimpleFileProcessor implements IProcessor
     protected $outputExtensions;
 
     protected $cache;
-    
+
     public function __construct($name = '__unnamed__', $inputExtensions = array(), $outputExtensions = array(), $priority = IProcessor::PRIORITY_DEFAULT)
     {
         $this->doConstruct($name, $inputExtensions, $outputExtensions, $priority);
@@ -40,16 +39,12 @@ class SimpleFileProcessor implements IProcessor
     {
         return $this->name;
     }
-    
-    public function initialize(IPieCrust $pieCrust, $logger = null)
+
+    public function initialize(IPieCrust $pieCrust)
     {
         $this->pieCrust = $pieCrust;
-
-        if ($logger == null)
-            $logger = \Log::singleton('null', '', '');
-        $this->logger = $logger;
     }
-    
+
     public function getPriority()
     {
         return $this->priority;
@@ -59,7 +54,7 @@ class SimpleFileProcessor implements IProcessor
     {
         $this->baker = $baker;
     }
-    
+
     public function supportsExtension($extension)
     {
         if ($extension == null or $extension == '') return false;
@@ -80,7 +75,7 @@ class SimpleFileProcessor implements IProcessor
     {
         return null;
     }
-    
+
     public function getOutputFilenames($filename)
     {
         $pathinfo = pathinfo($filename);
@@ -89,16 +84,16 @@ class SimpleFileProcessor implements IProcessor
             throw new PieCrustException("The filename doesn't have an extension -- " .
                                         "it should have been declared as unsupported by 'supportsExtension()'.");
         }
-        
+
         $key = array_search($pathinfo['extension'], $this->inputExtensions);
         if ($key === false)
         {
             throw new PieCrustException("Extension '" . $pathinfo['extension'] . "' is not supported.");
         }
-        
+
         return $pathinfo['filename'] . '.' . $this->outputExtensions[$key];
     }
-    
+
     public function process($inputPath, $outputDir)
     {
         $outputPath = $outputDir . $this->getOutputFilenames(pathinfo($inputPath, PATHINFO_BASENAME));
@@ -110,13 +105,13 @@ class SimpleFileProcessor implements IProcessor
     {
         $this->baker = null;
     }
-    
+
     protected function doConstruct($name, $inputExtensions, $outputExtensions, $priority = IProcessor::PRIORITY_DEFAULT)
     {
         if (is_array($inputExtensions))
         {
             $this->inputExtensions = $inputExtensions;
-            
+
             if (is_array($outputExtensions))
             {
                 if (count($inputExtensions) != count($outputExtensions)) throw new PieCrustException('The input and output extensions arrays must have the same length');
@@ -133,11 +128,11 @@ class SimpleFileProcessor implements IProcessor
             $this->inputExtensions = array($inputExtensions);
             $this->outputExtensions = array($outputExtensions);
         }
-        
+
         $this->name = $name;
         $this->priority = $priority;
     }
-    
+
     protected function doProcess($inputPath, $outputPath)
     {
     }
