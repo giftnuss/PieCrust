@@ -20,7 +20,7 @@ class PluginLoader
     protected $cachedComponents;
 
     /**
-     * Builds a new instance of PluginLoader with the specified plugin 
+     * Builds a new instance of PluginLoader with the specified plugin
      * directories.
      */
     public function __construct(IPieCrust $pieCrust)
@@ -180,8 +180,7 @@ class PluginLoader
         }
 
         // Initialize all the plugins.
-        foreach ($this->plugins as $plugin)
-        {
+        foreach ($this->plugins as $plugin) {
             $plugin->initialize($this->pieCrust);
         }
     }
@@ -243,11 +242,12 @@ class PluginLoader
             }
         }
 
-        if ($order != null)
+        if ($order != null) {
             usort($allComponents, $order);
+        }
 
         $this->cachedComponents[$getter] = $allComponents;
         return $allComponents;
     }
 }
- 
+
