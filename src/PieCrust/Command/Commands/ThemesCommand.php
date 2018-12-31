@@ -113,7 +113,7 @@ class ThemesCommand extends Command
             throw new PieCrustException("Can't find a single theme named: {$themeName}");
 
         $theme = $themes[0];
-        $log->info($log->convertColors("%gGET%n %m{$theme['source']}%n [{$theme['name']}]"));
+        $log->info("%gGET%n %m{$theme['source']}%n [{$theme['name']}]");
         $className = $theme['repository_class'];
         $repository = new $className;
         $installContext = new ThemeInstallContext($app, $log);

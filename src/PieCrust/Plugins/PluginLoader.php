@@ -151,8 +151,9 @@ class PluginLoader
 
     protected function ensureLoaded()
     {
-        if ($this->plugins != null)
+        if ($this->plugins != null) {
             return;
+        }
 
         // Always load the 'built-in' plugin first.
         $this->plugins = array(

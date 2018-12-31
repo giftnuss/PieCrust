@@ -1,0 +1,3 @@
+
+- PieCrustLogger - eine Fassade die verschiedene Logoptionen leicht möglich macht.
+  -> zum Beispiel im PieCrustServer

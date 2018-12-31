@@ -46,11 +46,11 @@ class HelpCommand extends Command
         {
             $this->parser->parent->displayUsage(false);
             echo "Additional help topics:" . PHP_EOL;
-            foreach (array_keys($this->parser->helpTopics) as $topic)
-            {
+            foreach (array_keys($this->parser->helpTopics) as $topic) {
                 echo "  {$topic}" . PHP_EOL;
             }
             echo PHP_EOL;
+            //print_r(get_declared_classes ());
             exit(0);
         }
 

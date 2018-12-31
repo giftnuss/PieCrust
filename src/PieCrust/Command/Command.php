@@ -28,8 +28,7 @@ class Command
     public function run($userArgc = null, $userArgv = null)
     {
         // Get the arguments.
-        if ($userArgc == null || $userArgv == null)
-        {
+        if ($userArgc == null || $userArgv == null) {
             $getopt = new \Console_Getopt();
             $userArgv = $getopt->readPHPArgv();
             // `readPHPArgv` returns a `PEAR_Error` (or something like it) if
@@ -44,48 +43,40 @@ class Command
         $rootDir = null;
         $isThemeSite = false;
         $configVariant = null;
-        for ($i = 1; $i < count($userArgv); ++$i)
-        {
+        for ($i = 1; $i < count($userArgv); ++$i) {
             $arg = $userArgv[$i];
 
-            if (substr($arg, 0, strlen('--root=')) == '--root=')
-            {
+            if (substr($arg, 0, strlen('--root=')) == '--root=') {
                 $rootDir = substr($arg, strlen('--root='));
-                if (substr($rootDir, 0, 1) == '~')
+                if (substr($rootDir, 0, 1) == '~') {
                     $rootDir = getenv("HOME") . substr($rootDir, 1);
+                }
             }
-            elseif ($arg == '--root')
-            {
+            elseif ($arg == '--root') {
                 $rootDir = $userArgv[$i + 1];
                 ++$i;
             }
-            elseif (substr($arg, 0, strlen('--config=')) == '--config=')
-            {
+            elseif (substr($arg, 0, strlen('--config=')) == '--config=') {
                 $configVariant = substr($arg, strlen('--config='));
             }
-            elseif ($arg == '--config')
-            {
+            elseif ($arg == '--config') {
                 $configVariant = $userArgv[$i + 1];
                 ++$i;
             }
-            elseif ($arg == '--theme')
-            {
+            elseif ($arg == '--theme') {
                 $isThemeSite = true;
             }
-            else if ($arg[0] != '-')
-            {
+            else if ($arg[0] != '-') {
                 // End of the global arguments sections. This is
                 // the command name.
                 break;
             }
         }
-        if ($rootDir == null)
-        {
+        if ($rootDir == null) {
             // No root given. Find it ourselves.
             $rootDir = PathHelper::getAppRootDir(getcwd(), $isThemeSite);
         }
-        else
-        {
+        else {
             // The root was given.
             $rootDir = trim($rootDir, " \"");
             if (!is_dir($rootDir)) {
@@ -134,8 +125,7 @@ class Command
             return strcmp($com1->getName(), $com2->getName());
         });
         // Add commands to the parser.
-        foreach ($sortedCommands as $command)
-        {
+        foreach ($sortedCommands as $command) {
             $commandParser = $parser->addCommand($command->getName());
             $command->setupParser($commandParser, $pieCrust);
         }
@@ -164,10 +154,8 @@ class Command
         }
 
         // Run the command.
-        foreach ($pieCrust->getPluginLoader()->getCommands() as $command)
-        {
-            if ($command->getName() == $result->command_name)
-            {
+        foreach ($pieCrust->getPluginLoader()->getCommands() as $command) {
+            if ($command->getName() == $result->command_name) {
                 try {
                     if ($rootDir == null && $command->requiresWebsite()) {
                         $cwd = getcwd();
