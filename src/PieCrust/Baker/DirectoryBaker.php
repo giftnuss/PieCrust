@@ -4,6 +4,7 @@ namespace PieCrust\Baker;
 
 use \Exception;
 use PieCrust\IPieCrust;
+use PieCrust\Log\Logger;
 use PieCrust\PieCrustDefaults;
 use PieCrust\PieCrustException;
 use PieCrust\Plugins\PluginLoader;
@@ -57,7 +58,7 @@ class DirectoryBaker implements IBaker
     /**
      * Creates a new instance of DirectoryBaker.
      */
-    public function __construct(IPieCrust $pieCrust, $bakeDir, array $parameters = array())
+    public function __construct(IPieCrust $pieCrust, $bakeDir, array $parameters = array(), Logger $log)
     {
         $this->pieCrust = $pieCrust;
         $this->tmpDir = $this->pieCrust->isCachingEnabled() ?
@@ -76,8 +77,7 @@ class DirectoryBaker implements IBaker
         );
 
         // Add a special mount point for the theme directory, if any.
-        if ($this->pieCrust->getThemeDir())
-        {
+        if ($this->pieCrust->getThemeDir()) {
             $this->parameters['mounts']['theme'] = $this->pieCrust->getThemeDir();
         }
 

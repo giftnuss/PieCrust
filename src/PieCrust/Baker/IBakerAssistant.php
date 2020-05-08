@@ -4,6 +4,7 @@ namespace PieCrust\Baker;
 
 use PieCrust\IPage;
 use PieCrust\IPieCrust;
+use PieCrust\Log\Logger;
 
 
 /**
@@ -20,7 +21,7 @@ interface IBakerAssistant
     /**
      * Initializes the assistant.
      */
-    public function initialize(IPieCrust $pieCrust, $logger = null);
+    public function initialize(IPieCrust $pieCrust, Logger $logger);
 
     /**
      * Gets called before baking the site.

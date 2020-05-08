@@ -4,6 +4,7 @@ namespace PieCrust\Baker;
 
 use PieCrust\IPage;
 use PieCrust\IPieCrust;
+use PieCrust\Log\Logger;
 
 
 /**
@@ -35,14 +36,9 @@ class BakerAssistant implements IBakerAssistant
     /**
      * Initializes the assistant.
      */
-    public function initialize(IPieCrust $pieCrust, $logger = null)
+    public function initialize(IPieCrust $pieCrust, Logger $logger)
     {
         $this->pieCrust = $pieCrust;
-
-        if ($logger == null)
-        {
-            $logger = \Log::singleton('null', '', '');
-        }
         $this->logger = $logger;
     }
 
