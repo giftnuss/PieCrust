@@ -14,6 +14,7 @@ use PieCrust\PieCrustException;
 use PieCrust\Baker\DirectoryBaker;
 use PieCrust\Runner\PieCrustErrorHandler;
 use PieCrust\Runner\PieCrustRunner;
+use PieCrust\Log\Logger;
 use PieCrust\Util\PathHelper;
 
 
@@ -34,7 +35,7 @@ class PieCrustServer
     /**
      * Creates a new server.
      */
-    public function __construct($appDir, array $options = array(), $logger)
+    public function __construct($appDir, array $options = array(), Logger $logger)
     {
         // The website's root.
         $this->rootDir = rtrim($appDir, '/\\');
@@ -70,6 +71,7 @@ class PieCrustServer
         }
 
         $this->server = null;
+        $this->logger = $logger;
     }
 
 
@@ -258,7 +260,7 @@ class PieCrustServer
         $endTime = microtime(true);
         $timeSpan = microtime(true) - $startTime;
         $context->getLog()->debug("Ran PieCrust request in " . $timeSpan * 1000 . "ms.");
-        if ($pieCrustException != null)
+        if ($pieCrustException !== null)
         {
             $this->logger->exception($pieCrustException, true);
         }
@@ -315,7 +317,8 @@ class PieCrustServer
                             {
                                 $self->_runPieCrustRequest($context);
                             });
-        $this->server->setPreprocessor(function($req) use ($self) { $self->_preprocessRequest($req); });
+        $this->server->setPreprocessor(function($req) use ($self) {
+            $self->_preprocessRequest($req); });
     }
 
     protected function prebake($server = null, $path = null)
