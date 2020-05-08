@@ -40,12 +40,10 @@ class TwigTemplateEngine implements ITemplateEngine
         {
             $this->twigLoader->setTemplateSource('__string_tpl__', $content);
             $tpl = $this->twigEnv->loadTemplate('__string_tpl__');
-            try
-            {
+            try {
                 $tpl->display($data);
             }
-            catch (Exception $e)
-            {
+            catch (Exception $e) {
                 unset($data['PIECRUST_APP']);
                 $this->twigEnv->setCache($cache);
                 throw $e;

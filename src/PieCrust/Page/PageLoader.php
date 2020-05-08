@@ -19,7 +19,7 @@ class PageLoader
 {
     protected $page;
     protected $cache;
-    
+
     protected $wasCached;
     /**
      * Gets whether the page's contents have been cached.
@@ -40,7 +40,7 @@ class PageLoader
         }
         return $this->wasCached;
     }
-    
+
     protected $cacheTime;
     /**
      * Gets the cache time for the page, or false if it was not cached.
@@ -60,34 +60,32 @@ class PageLoader
         }
         return $this->cacheTime;
     }
-    
+
     /**
      * Creates a new instance of PageLoader.
      */
     public function __construct(IPage $page)
     {
         $this->page = $page;
-        
+
         $this->cache = null;
         if ($page->getApp()->isCachingEnabled())
         {
             $this->cache = new Cache($page->getApp()->getCacheDir() . 'pages_r');
         }
-        
+
         $this->pageData = null;
     }
-    
+
     /**
      * Loads the page's configuration and contents.
      */
     public function load()
     {
-        try
-        {
+        try {
             return $this->loadUnsafe();
         }
-        catch (Exception $e)
-        {
+        catch (Exception $e) {
             $relativePath = PageHelper::getRelativePath($this->page);
             throw new PieCrustException("Error loading page: {$relativePath}", 0, $e);
         }
@@ -95,12 +93,10 @@ class PageLoader
 
     public function formatContents(array $rawSegments)
     {
-        try
-        {
+        try {
             return $this->formatContentsUnsafe($rawSegments);
         }
-        catch (Exception $e)
-        {
+        catch (Exception $e) {
             $relativePath = PageHelper::getRelativePath($this->page);
             throw new PieCrustException("Error formatting page: {$relativePath}", 0, $e);
         }
@@ -116,7 +112,7 @@ class PageLoader
             $this->page->getConfig()->set($config, false); // false = No need to validate this.
             if (!$this->page->getConfig()->hasValue('segments'))
                 throw new PieCrustException("Can't get segments list from cache.");
-            
+
             $contents  = array();
             foreach ($config['segments'] as $key)
             {
@@ -130,7 +126,7 @@ class PageLoader
                 if (count($contents[$key]) > 0 && $contents[$key]->parts[0]->content === null)
                     throw new PieCrustException("Corrupted cache: is the page not saved in UTF-8 encoding?");
             }
-            
+
             return $contents;
         }
         else
@@ -157,7 +153,7 @@ class PageLoader
             // Set the configuration.
             $config = $this->page->getConfig();
             $config->set($header->config);
-            
+
             // Set the raw content with the unparsed content segments.
             $contents = $this->parseContentSegments($rawContents, $header->textOffset);
             // Add the list of known segments to the configuration.
@@ -165,7 +161,7 @@ class PageLoader
             {
                 $config->appendValue('segments', $key);
             }
-            
+
             // Cache that shit out.
             if ($this->cache != null)
             {
@@ -175,7 +171,7 @@ class PageLoader
 
                 $configText = json_encode($config->get());
                 $this->cache->write($cacheUri, 'json', $configText);
-                
+
                 $keys = $config['segments'];
                 foreach ($keys as $key)
                 {
@@ -183,20 +179,20 @@ class PageLoader
                     $this->cache->write($cacheUri . '.' . $key, 'json', $segmentText);
                 }
             }
-            
+
             return $contents;
         }
     }
-    
+
     protected function parseContentSegments($rawContents, $offset)
     {
         $end = strlen($rawContents);
         $matches = array();
         $matchCount = preg_match_all(
-            '/^(?:---\s*(\w+)(?:\:(\w+))?\s*---|<--\s*(\w+)\s*-->)\s*\n/m', 
-            $rawContents, 
-            $matches, 
-            PREG_PATTERN_ORDER | PREG_OFFSET_CAPTURE, 
+            '/^(?:---\s*(\w+)(?:\:(\w+))?\s*---|<--\s*(\w+)\s*-->)\s*\n/m',
+            $rawContents,
+            $matches,
+            PREG_PATTERN_ORDER | PREG_OFFSET_CAPTURE,
             $offset
         );
         $segmentName = 'content';
@@ -204,7 +200,7 @@ class PageLoader
         if ($matchCount > 0)
         {
             $contents = array();
-            
+
             if ($matches[0][0][1] > $offset)
             {
                 // There's some default content at the beginning.
@@ -212,11 +208,11 @@ class PageLoader
                     substr($rawContents, $offset, $matches[0][0][1] - $offset)
                 );
             }
-            
+
             for ($i = 0; $i < $matchCount; ++$i)
             {
-                // Get each segment as the text that's between the end of the 
-                // current captured string and the beginning of the next 
+                // Get each segment as the text that's between the end of the
+                // current captured string and the beginning of the next
                 // captured string (or the end of the input text if the current
                 // is the last capture).
                 $matchStart = $matches[0][$i][1] + strlen($matches[0][$i][0]);
@@ -290,27 +286,28 @@ class PageLoader
                 }
 
                 $format = $part->format;
-                if(!$format)
+                if(!$format) {
                     $format = $this->page->getConfig()->getValue('format');
+                }
                 $renderedAndFormattedContent = PieCrustHelper::formatText(
-                    $pieCrust, 
-                    $renderedContent, 
+                    $pieCrust,
+                    $renderedContent,
                     $format
                 );
-                $contents[$key] .= $renderedAndFormattedContent;
+                $contents[$key] .=  $renderedContent; #$renderedAndFormattedContent;
             }
         }
         if (!empty($contents['content']))
         {
             $matches = array();
             if (preg_match(
-                '/^<!--\s*(more|(page)?break)\s*-->\s*$/m', 
-                $contents['content'], 
-                $matches, 
+                '/^<!--\s*(more|(page)?break)\s*-->\s*$/m',
+                $contents['content'],
+                $matches,
                 PREG_OFFSET_CAPTURE
             ))
             {
-                // Add a special content segment for the "intro/abstract" part 
+                // Add a special content segment for the "intro/abstract" part
                 // of the article.
                 $offset = $matches[0][1];
                 $abstract = substr($contents['content'], 0, $offset);

@@ -365,15 +365,13 @@ class Page implements IPage
      */
     protected function ensureContentsFormatted()
     {
-        if ($this->formattedContents == null)
-        {
+        if ($this->formattedContents == null) {
             $this->ensureConfigLoaded();
 
             $loader = new PageLoader($this);
             $this->formattedContents = $loader->formatContents($this->contents);
 
-            foreach ($this->observers as $observer)
-            {
+            foreach ($this->observers as $observer) {
                 $observer->onPageFormatted($this);
             }
         }

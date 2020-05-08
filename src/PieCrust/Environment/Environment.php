@@ -2,7 +2,7 @@
 
 namespace PieCrust\Environment;
 
-use Logger;
+use PieCrust\Log\Logger;
 use PieCrust\IPieCrust;
 use PieCrust\PieCrustException;
 use PieCrust\IO\FileSystemFactory;
@@ -124,11 +124,10 @@ abstract class Environment
     /**
      * Creates a new instance of `Environment`.
      */
-    protected function __construct($logger = null)
+    protected function __construct(Logger $logger = null)
     {
-        if ($logger == null) {
-            $logger = Logger::getRootLogger();
-            #\Log::singleton('null', '', '');
+        if ($logger === null) {
+            $logger = new Logger($logger);
         }
         $this->logger = $logger;
 

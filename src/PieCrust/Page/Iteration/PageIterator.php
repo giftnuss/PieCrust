@@ -270,7 +270,7 @@ class PageIterator extends BaseIterator
     // {{{ Shortcut template members
     public function sortBy($name, $reverse = false)
     {
-        $this->pieCrust->getEnvironment()->getLog()->warn(
+        $this->pieCrust->getEnvironment()->getLog()->warning(
             "The `sortBy` template method has been renamed `sort`."
         );
         return $this->sort($name, $reverse);

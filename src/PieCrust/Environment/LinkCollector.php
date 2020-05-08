@@ -54,7 +54,7 @@ class LinkCollector
             $log = $this->pieCrust->getEnvironment()->getLog();
             if (strpos($tags, '/') !== false)
             {
-                $log->warn(
+                $log->warning(
                     "A link to tag {$tags} was specified in this page. ".
                     "If this is a tag that contains a slash character ('/') then ignore this warning. ".
                     "However, if this was intended to be a multi-tags link, you'll need to ".
