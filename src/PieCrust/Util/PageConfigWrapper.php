@@ -2,6 +2,7 @@
 
 namespace PieCrust\Util;
 
+use PieCrust\PieCrustException;
 use PieCrust\IPage;
 
 
