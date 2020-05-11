@@ -20,9 +20,10 @@ class PieCrustImporterTest extends PieCrustTestCase
         $app = new PieCrust(array(
             'root' => $fs->getAppRoot()
         ));
-        $importer = new PieCrustImporter($app);
+        $logger = $app->getEnvironment()->getLog();
+        $importer = new PieCrustImporter($app,$logger);
 
-        $sampleXml = PIECRUST_UNITTESTS_DATA_DIR . 
+        $sampleXml = PIECRUST_UNITTESTS_DATA_DIR .
             'import/wordpress.test-data.2011-01-17.xml';
         $importer->import(
             'wordpress',
