@@ -2,8 +2,7 @@
 
 namespace PieCrust\Formatters;
 
-use Michelf\Markdown;
-use Michelf\MarkdownExtra;
+use League\CommonMark\CommonMarkConverter;
 use PieCrust\IPieCrust;
 
 
@@ -19,9 +18,9 @@ class MarkdownFormatter implements IFormatter
     {
         $this->pieCrust = $pieCrust;
         $this->parser = null;
-        $this->useExtra = $pieCrust->getConfig()->getValue('markdown/use_markdown_extra');
-        $this->useSundown = $pieCrust->getConfig()->getValue('markdown/use_sundown');
-        $this->parserConfig = $pieCrust->getConfig()->getValue('markdown/config');
+        #$this->useExtra = $pieCrust->getConfig()->getValue('markdown/use_markdown_extra');
+        #$this->useSundown = $pieCrust->getConfig()->getValue('markdown/use_sundown');
+        #$this->parserConfig = $pieCrust->getConfig()->getValue('markdown/config');
     }
 
     public function getPriority()
@@ -41,14 +40,17 @@ class MarkdownFormatter implements IFormatter
 
     public function format($text)
     {
-        if (!$this->useSundown)
-        {
-            return $this->phpMarkdownFormat($text);
+        $converter = new CommonMarkConverter();
+        $cnf = $this->pieCrust->getConfig();
+        if(isset($cnf['referenceMap'])) {
+            $text .= "\n\n";
+            foreach($cnf['referenceMap'] as $ref => $url) {
+                $text .= "[$ref]: $url\n";
+            }
+            $text .= "\n";
         }
-        else
-        {
-            return $this->sundownFormat($text);
-        }
+        $result = $converter->convertToHtml($text);
+        return $result;
     }
 
     private function phpMarkdownFormat($text)

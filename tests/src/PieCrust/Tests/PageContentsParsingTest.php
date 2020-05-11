@@ -196,17 +196,15 @@ class PageContentsParsingTest extends PieCrustTestCase
     {
         $fs = MockFileSystem::create()
             ->withConfig(array(
-                'markdown' => array(
-                    'config' => array('predef_urls' => array(
-                        'ref1' => 'http://bolt80.com',
-                        'ref2' => 'http://php.net'
-                    ))
+                'referenceMap' => array(
+                    'ref1' => 'http://bolt80.com',
+                    'ref2' => 'http://php.net'
                 )
             ))
             ->withPage(
                 'foo.html',
                 array(),
-                "[FOO][ref1] and [BAR][ref2] and [HEY](https://go.away)"
+                "[FOO][ref1] and [BAR][ref2]"
             );
         $app = $fs->getApp();
 

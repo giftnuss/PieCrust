@@ -294,7 +294,7 @@ class PageLoader
                     $renderedContent,
                     $format
                 );
-                $contents[$key] .=  $renderedContent; #$renderedAndFormattedContent;
+                $contents[$key] .= $renderedAndFormattedContent;
             }
         }
         if (!empty($contents['content']))
