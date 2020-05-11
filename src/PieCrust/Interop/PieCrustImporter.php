@@ -4,6 +4,7 @@ namespace PieCrust\Interop;
 
 use \Exception;
 use PieCrust\IPieCrust;
+use PieCrust\Log\Logger;
 use PieCrust\PieCrustDefaults;
 use PieCrust\PieCrustException;
 use PieCrust\Interop\Importers\IImporter;
@@ -20,14 +21,9 @@ class PieCrustImporter
     /**
      * Creates a new instance of PieCrustImporter.
      */
-    public function __construct(IPieCrust $pieCrust, $logger = null)
+    public function __construct(IPieCrust $pieCrust, Logger $logger)
     {
         $this->pieCrust = $pieCrust;
-
-        if ($logger == null)
-        {
-            $logger = \Log::singleton('null', '', '');
-        }
         $this->logger = $logger;
     }
 
@@ -38,7 +34,7 @@ class PieCrustImporter
     {
         return $this->pieCrust->getPluginLoader()->getImporters();
     }
-    
+
     /**
      * Imports content at the given source, using the given importer format.
      */
@@ -54,7 +50,7 @@ class PieCrustImporter
                 return;
             }
         }
-        
+
         throw new PieCrustException("Importer format '{$format} ' is unknown.");
     }
 }
