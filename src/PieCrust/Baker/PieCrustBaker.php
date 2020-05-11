@@ -99,9 +99,9 @@ class PieCrustBaker implements IBaker
         }
         return $this->bakeDir;
     }
-    
+
     private function prepareOutputPath()
-    {	
+    {
 		$pieCrust = $this->pieCrust;
         $outputDir = $this->getParameterValue('output');
         if(!$outputDir && $pieCrust->getConfig()->hasValue('site/output')){
@@ -161,7 +161,7 @@ class PieCrustBaker implements IBaker
             $bakerParametersFromApp,
             $bakerParameters
         );
-        
+
         $this->prepareOutputPath();
 
         $this->pageBaker = null;
@@ -645,26 +645,8 @@ class PieCrustBaker implements IBaker
 
     public static function formatTimed($startTime, $message)
     {
-        static $color = null;
-        if ($color === null)
-        {
-            if (PieCrustDefaults::IS_WINDOWS())
-                $color = false;
-            else
-                $color = new \Console_Color2();
-        }
-
         $endTime = microtime(true);
         $endTimeStr = sprintf('%8.1f ms', ($endTime - $startTime)*1000.0);
-        if ($color)
-        {
-            $endTimeStr = $color->escape($endTimeStr);
-            $message = $color->escape($message);
-            return $color->convert("[%g{$endTimeStr}%n] {$message}");
-        }
-        else
-        {
-            return "[{$endTimeStr}] {$message}";
-        }
+        return "[{$endTimeStr}] {$message}";
     }
 }
