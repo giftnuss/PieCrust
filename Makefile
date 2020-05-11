@@ -1,5 +1,5 @@
 
-.PHONY: cover, test
+.PHONY: cover test
 
 PHP=php
 BROWSER=firefox
