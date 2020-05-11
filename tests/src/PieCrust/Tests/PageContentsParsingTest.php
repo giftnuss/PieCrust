@@ -14,13 +14,13 @@ use PieCrust\Mock\MockPieCrust;
 
 
 class PageContentsParsingTest extends PieCrustTestCase
-{   
+{
     public function parsePageContentsDataProvider()
     {
         $data = array();
-        
+
         $htmlFiles = new \GlobIterator(
-            PIECRUST_UNITTESTS_DATA_DIR . 'pages/*.html', 
+            PIECRUST_UNITTESTS_DATA_DIR . 'pages/*.html',
             \GlobIterator::CURRENT_AS_FILEINFO | \GlobIterator::SKIP_DOTS
         );
         foreach ($htmlFiles as $htmlFile)
@@ -28,13 +28,13 @@ class PageContentsParsingTest extends PieCrustTestCase
             $info = pathinfo($htmlFile);
             $ymlFile = $info['dirname'] . DIRECTORY_SEPARATOR . $info['filename'] . '.yml';
             if (!is_file($ymlFile)) continue;
-            
+
             $data[] = array($htmlFile, $ymlFile);
         }
-        
+
         return $data;
     }
-    
+
     /**
      * @dataProvider parsePageContentsDataProvider
      */
@@ -80,7 +80,7 @@ class PageContentsParsingTest extends PieCrustTestCase
             }
             unset($expectedResults['needs']);
         }
-        
+
         // Build a test page and get the full expected config.
         $p = new Page($pc, '/test', $testFilename);
         $expectedConfig = PageConfiguration::getValidatedConfig($p, $expectedResults['config']);
@@ -89,7 +89,7 @@ class PageContentsParsingTest extends PieCrustTestCase
         {
             $expectedConfig['segments'][] = $key;
         }
-        
+
         // Start asserting!
         $actualConfig = $p->getConfig()->get();
         $this->assertEquals($expectedConfig, $actualConfig, 'The configurations are not equivalent.');
@@ -110,7 +110,7 @@ class PageContentsParsingTest extends PieCrustTestCase
         $this->assertFalse($filter->hasClauses());
         $filter->addClauses($filterInfo);
         $this->assertTrue($filter->hasClauses());
-        
+
         $page = new MockPage();
         $this->assertFalse($filter->postMatches($page));
         $page->getConfig()->setValue('foo', array('nieuh'));
@@ -129,7 +129,7 @@ class PageContentsParsingTest extends PieCrustTestCase
         ));
         $filter = new PaginationFilter();
         $filter->addClauses($filterInfo);
-        
+
         $page = new MockPage();
         $this->assertFalse($filter->postMatches($page));
         $page->getConfig()->setValue('foo', array('nieuh'));
@@ -204,9 +204,9 @@ class PageContentsParsingTest extends PieCrustTestCase
                 )
             ))
             ->withPage(
-                'foo.html', 
-                array(), 
-                "[FOO][ref1] and [BAR][ref2]"
+                'foo.html',
+                array(),
+                "[FOO][ref1] and [BAR][ref2] and [HEY](https://go.away)"
             );
         $app = $fs->getApp();
 
