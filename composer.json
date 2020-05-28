@@ -49,13 +49,9 @@
 	},
     "autoload": {
         "psr-0": {
-            "PieCrust": [ "src/", "tests/src/" ],
-            "Log": "libs/pear",
-            "Console": "libs/pear",
-            "Benchmark_": "libs/pear"
+            "PieCrust": [ "src/", "tests/src/" ]
         }
     },
-	"include-path": [ "libs/pear" ],
     "bin": [
         "piecrust"
     ]
