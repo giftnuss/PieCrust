@@ -41,7 +41,10 @@
         "bolt80/stupidhttp": "v0.2.0",
         "psr/log": "v1.1.0",
         "apache/log4php": "^2.3",
-        "league/commonmark": "^1.4"
+        "league/commonmark": "^1.4",
+        "ulrichsg/getopt-php": "^3.3.0",
+        "talesoft/tale-factory": "^0.3"
+
     },
     "require-dev": {
 		"phpunit/phpunit": "v5.6.8",
