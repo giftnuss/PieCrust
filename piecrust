@@ -1,11 +1,11 @@
 #!/usr/bin/env php
 <?php
 
-if (version_compare('5.6.0', PHP_VERSION, '>')) {
+if (version_compare('7.1.0', PHP_VERSION, '>')) {
     fwrite(
         STDERR,
         sprintf(
-            'This version of piecrust is supported on PHP 5.6 and PHP 7.0.' . PHP_EOL .
+            'This version of piecrust is supported on PHP 7.1.' . PHP_EOL .
             'You are using PHP %s (%s).' . PHP_EOL,
             PHP_VERSION,
             PHP_BINARY
@@ -126,22 +126,6 @@ function chef_shutdown_function()
  */
 function piecrust_setup($profile = 'web')
 {
-    // Add the `libs` directory to the include path for the PEAR stuff
-    // that still uses old-style includes, and for other stuff like Markdown
-    // and Smartypants that have conditional include directories (i.e. include
-    // a different implement of the same class based on runtime conditions).
-    $srcDir = __DIR__ . '/src';
-    $libsDir = __DIR__ . '/vendor';
-    set_include_path(
-        get_include_path() . PATH_SEPARATOR .
-        $libsDir . '/pear' . PATH_SEPARATOR .
-        $libsDir);
-
-    // Set the autoloader
-    $loader = (require $libsDir . '/autoload.php');
-    $loader->add('Console_', $libsDir . '/pear');
-    $loader->add('Log_', $libsDir . '/pear');
-
     // Set error handling.
     switch ($profile)
     {
@@ -189,10 +173,11 @@ function piecrust_run($parameters = array(), $uri = null, $profile = 'web')
 /**
  * Setups and runs a new instance of Chef.
  */
-function piecrust_command($userArgc = null, $userArgv = null, $profile = 'chef')
+function piecrust_command($userArgv = null, $profile = 'piecrust')
 {
     piecrust_setup($profile);
 
     $chef = new PieCrust\Command\Command();
-    return $chef->run($userArgc, $userArgv);
+    $chef->setup();
+    return $chef->run($userArgv);
 }
