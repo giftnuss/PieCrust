@@ -10,17 +10,10 @@ use PieCrust\Mock\MockFileSystem;
 
 class AssetorTest extends PieCrustTestCase
 {
-    public function assetorDataProvider()
+    public function assetorDataProvider(): array
     {
         return array(
-            array(
-                function () {
-                    return MockFileSystem::create()
-                        ->withPage('foo/bar');
-                },
-                array()
-            ),
-            array(
+            'one-asset' => array(
                 function () {
                     return MockFileSystem::create()
                         ->withPage('foo/bar')
@@ -28,7 +21,7 @@ class AssetorTest extends PieCrustTestCase
                 },
                 array('one' => 'one')
             ),
-            array(
+            'multiple-assets' => array(
                 function () {
                     return MockFileSystem::create()
                         ->withPage('foo/bar')
@@ -43,14 +36,14 @@ class AssetorTest extends PieCrustTestCase
     /**
      * @dataProvider assetorDataProvider
      */
-    public function testAssetor($fsCreator, $expectedAssets)
+    public function testAssetor($fsCreator, array $expectedAssets): void
     {
         $fs = $fsCreator();
         $pc = $fs->getApp();
         $page = Page::createFromUri($pc, 'foo/bar', false);
         $assetor = new Assetor($page);
-        foreach ($expectedAssets as $name => $contents)
-        {
+
+        foreach ($expectedAssets as $name => $contents) {
             $this->assertTrue(isset($assetor[$name]));
             $this->assertEquals(
                 '/_content/pages/foo/bar-assets/' . $name . '.txt',
@@ -58,11 +51,21 @@ class AssetorTest extends PieCrustTestCase
         }
     }
 
-    /**
-     * @expectedException \PieCrust\PieCrustException
-     */
+    public function testAssetorWithoutAsset(): void
+    {
+        $fs = MockFileSystem::create()->withPage('foo/bar');
+
+        $pc = $fs->getApp();
+        $page = Page::createFromUri($pc, 'foo/bar', false);
+        $assetor = new Assetor($page);
+
+        $this->assertFalse($assetor->getUrlBase());
+    }
+
     public function testMissingAsset()
     {
+        $this->expectException(\PieCrust\PieCrustException::class);
+
         $fs = MockFileSystem::create()->withPage('foo/bar');
         $pc = new PieCrust(array('root' => $fs->getAppRoot()));
         $page = Page::createFromUri($pc, 'foo/bar', false);
@@ -70,11 +73,10 @@ class AssetorTest extends PieCrustTestCase
         $tmp = isset($assetor['blah']);
     }
 
-    /**
-     * @expectedException \PieCrust\PieCrustException
-     */
     public function testSeveralAssetsWithSameFilename()
     {
+        $this->expectException(\PieCrust\PieCrustException::class);
+
         $fs = MockFileSystem::create()
             ->withPage('foo/bar')
             ->withPageAsset('foo/bar', 'one.txt', 'one')
