@@ -36,7 +36,7 @@
         "twig/twig": "~v1.42.5",
         "mustache/mustache": "~2",
         "geshi/geshi": "1.0.*",
-        "leafo/lessphp": "0.3.*",
+        "marcusschwarz/lesserphp": "^0.6.0",
         "netcarver/textile": "~v3.5.1",
         "bolt80/stupidhttp": "v0.2.0",
         "psr/log": "v1.1.0",
@@ -47,8 +47,8 @@
 
     },
     "require-dev": {
-		"phpunit/phpunit": "v5.6.8",
-        "mikey179/vfsstream": "v1.6.5"
+		"phpunit/phpunit": "^9.5.0",
+        "mikey179/vfsstream": "v1.6.8"
 	},
     "autoload": {
         "psr-0": {
