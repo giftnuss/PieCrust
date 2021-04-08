@@ -22,11 +22,11 @@ class Assetor implements \ArrayAccess, \Iterator
      */
     const ASSET_DIR_SUFFIX = '-assets';
     const ASSET_URL_SUFFIX = self::ASSET_DIR_SUFFIX;
-    
+
     protected $page;
     protected $assetsDir;
     protected $assetsCache;
-    
+
     protected $urlBase;
     /**
      * Gets the base URL for the assets.
@@ -35,17 +35,18 @@ class Assetor implements \ArrayAccess, \Iterator
     {
         return $this->urlBase;
     }
-    
+
     /**
      * Sets the base URL for the assets.
      */
     public function setUrlBase($urlBase)
     {
-        if ($this->assetsCache != null)
+        if ($this->assetsCache !== null) {
             throw new PieCrustException("The base URL can only be set before the assets are loaded.");
+        }
         $this->urlBase = rtrim($urlBase, '/');
     }
-    
+
     /**
      * Gets all the asset path-names.
      */
@@ -65,7 +66,7 @@ class Assetor implements \ArrayAccess, \Iterator
         }
         return $paths;
     }
-    
+
     /**
      * Creates a new instance of Assetor.
      */
@@ -73,12 +74,12 @@ class Assetor implements \ArrayAccess, \Iterator
     {
         $pathParts = pathinfo($page->getPath());
         $this->assetsDir = $pathParts['dirname'] . '/' . $pathParts['filename'] . self::ASSET_DIR_SUFFIX;
-        if (is_dir($this->assetsDir))
-        {
-            $urlBaseRemap = $page->getAssetUrlBaseRemap();
-            if ($urlBaseRemap == null)
-                $urlBaseRemap = '%site_root%%path%' . self::ASSET_DIR_SUFFIX;
 
+        if (is_dir($this->assetsDir)) {
+            $urlBaseRemap = $page->getAssetUrlBaseRemap();
+            if ($urlBaseRemap == null) {
+                $urlBaseRemap = '%site_root%%path%' . self::ASSET_DIR_SUFFIX;
+            }
             $this->urlBase = self::buildUrlBase($page, $urlBaseRemap);
         }
         else
@@ -88,7 +89,7 @@ class Assetor implements \ArrayAccess, \Iterator
         }
         $this->page = $page;
     }
-    
+
     // {{{ ArrayAccess members
     public function offsetExists($offset)
     {
@@ -101,56 +102,56 @@ class Assetor implements \ArrayAccess, \Iterator
                 "For example, with Twig: {{ asset['some-file'] }}");
         return true;
     }
-    
-    public function offsetGet($offset) 
+
+    public function offsetGet($offset)
     {
         $this->ensureAssetsCache();
         return $this->assetsCache[$offset];
     }
-    
+
     public function offsetSet($offset, $value)
     {
         throw new PieCrustException('Assetor is read-only.');
     }
-    
+
     public function offsetUnset($offset)
     {
         throw new PieCrustException('Assetor is read-only.');
     }
     // }}}
-    
+
     // {{{ Iterator members
     public function rewind()
     {
         $this->ensureAssetsCache();
         return reset($this->assetsCache);
     }
-  
+
     public function current()
     {
         $this->ensureAssetsCache();
         return current($this->assetsCache);
     }
-  
+
     public function key()
     {
         $this->ensureAssetsCache();
         return key($this->assetsCache);
     }
-  
+
     public function next()
     {
         $this->ensureAssetsCache();
         return next($this->assetsCache);
     }
-  
+
     public function valid()
     {
         $this->ensureAssetsCache();
         return key($this->assetsCache) !== null;
     }
     // }}}
-    
+
     protected function ensureAssetsCache()
     {
         if ($this->assetsCache === null)
@@ -170,13 +171,13 @@ class Assetor implements \ArrayAccess, \Iterator
             }
         }
     }
-    
+
     protected static function buildUrlBase(IPage $page, $assetUrlBaseRemap)
     {
         $siteRoot = $page->getApp()->getConfig()->getValueUnchecked('site/root');
         $relativePath = str_replace(
-            '\\', 
-            '/', 
+            '\\',
+            '/',
             PieCrustHelper::getRelativePath($page->getApp(), $page->getPath(), true)
         );
         $uri = $page->getUri();
@@ -201,7 +202,7 @@ class Assetor implements \ArrayAccess, \Iterator
             '%uri%' => $uri
         );
         return str_replace(
-            array_keys($replacements), 
+            array_keys($replacements),
             array_values($replacements),
             $assetUrlBaseRemap
         );
