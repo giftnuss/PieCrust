@@ -2,12 +2,13 @@
 
 namespace PieCrust\Tests;
 
+use PHPUnit\Framework\TestCase;
 use PieCrust\Util\PathHelper;
 
 
-class PieCrustTestCase extends \PHPUnit_Framework_TestCase
+class PieCrustTestCase extends TestCase
 {
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         $mockDir = PIECRUST_UNITTESTS_MOCK_DIR;
         if (is_dir($mockDir))
@@ -29,6 +30,14 @@ class PieCrustTestCase extends \PHPUnit_Framework_TestCase
                 }
             }
         }
+    }
+
+    public function invokeMethod(&$object, $methodName, array $parameters = array())
+    {
+        $reflection = new \ReflectionClass(get_class($object));
+        $method = $reflection->getMethod($methodName);
+        $method->setAccessible(true);
+        return $method->invokeArgs($object, $parameters);
     }
 }
 

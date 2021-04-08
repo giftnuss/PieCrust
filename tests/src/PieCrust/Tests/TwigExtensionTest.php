@@ -353,12 +353,12 @@ EOD;
         $this->assertEquals($expected, $actual);
     }
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->oldLocale = setlocale(LC_ALL, '0');
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         setlocale(LC_ALL, $this->oldLocale);
     }

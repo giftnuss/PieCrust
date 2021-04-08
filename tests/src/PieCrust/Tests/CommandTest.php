@@ -114,7 +114,7 @@ class CommandTest extends PieCrustTestCase
         $this->runCommand($fs, $args);
         $actual = file_get_contents($logFile);
         $actual = $this->stripLog($actual);
-       // $this->assertEquals($expected, $actual);
+        $this->assertEquals($expected, $actual);
     }
 
     protected function runCommand($fs, $args)
