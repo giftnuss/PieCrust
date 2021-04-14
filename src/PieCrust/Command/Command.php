@@ -3,6 +3,8 @@
 namespace PieCrust\Command;
 
 use \Exception;
+use GetOpt\GetOpt;
+use GetOpt\Option;
 use PieCrust\PieCrust;
 use PieCrust\PieCrustDefaults;
 use PieCrust\PieCrustException;
@@ -16,28 +18,163 @@ use PieCrust\Util\PathHelper;
 class Command
 {
     /**
+     * The rootdir
+     */
+    protected $rootdir;
+
+    /**
+     * The piecrust object
+     */
+    protected $piecrust;
+
+    /**
+     * The registered commands
+     */
+    protected $commands;
+
+    /**
+     * The command context
+     */
+    protected $context;
+
+    /**
      * Builds a new instance of piecrust command.
      */
     public function __construct()
     {
+        $this->commands = [];
+        $this->context = new Context();
+        $this->getopt = new GetOpt();
+    }
+
+
+    /**
+     * Prepare default options and commands.
+     */
+    public function setup()
+    {
+        foreach($this->getOptions() as $opt) {
+            $this->registerOption($opt);
+        }
+        $this->registerCommand('PieCrust\\Command\\Bake');
+    }
+
+    public function registerCommand($namespace)
+    {
+        $info = $this->fabricateObject($namespace,'Info');
+        $name = $info->getName();
+        if(empty($this->commands[$name])) {
+            $this->commands[$name] = $namespace;
+
+            $cmd = new \GetOpt\Command($name, function () {
+                echo "ggggg";
+            });
+            $this->getopt->addCommand($cmd);
+        }
+        else {
+            throw new CommandException("Command $name is already registered.");
+        }
+    }
+
+    public function run ($args) {
+        $this->getopt->process($args);
+
+        $command = $this->getopt->getCommand();
+        if (!$command) {
+            // no command given - show help?
+        } else {
+            $this->prepareRootdir();
+            $this->preparePiecrust();
+            $this->prepareContext($command);
+            // do something with the command - example:
+            $handler = $command->getHandler();
+            $handler();
+        }
+    }
+
+    protected function fabricateObject($namespace,$name)
+    {
+        $class = $namespace . "\\$name";
+        if(class_exists($class)) {
+            return new $class();
+        }
+        throw new CommandException("No $name class defined in command namespace $namespace.");
+    }
+
+    protected function prepareContext($command)
+    {
+        $commandname = $command->getName();
+        $namespace = $this->commands[$commandname];
+        $this->context->setCommandname($commandname);
+        $this->context->setNamespace($namespace);
+
+        $info = $this->fabricateObject($namespace,'Info');
+        $options = array_merge($this->getOptions(),$info->getOptions());
+        foreach($options as $opt) {
+            $this->context->setOption($opt['long'], $this->getopt->getOption($opt['long']));
+        }
+        $this->context->setApp($this->piecrust);
+    }
+
+    protected function getOptionObject()
+    {
+        return $this->getopt;
+    }
+
+    protected function getRootdir()
+    {
+        return $this->rootdir;
+    }
+
+    protected function prepareRootdir()
+    {
+        $rootdir = $this->getopt->getOption('root');
+        $themesite = $this->getopt->getOption('theme');
+        if($rootdir === null) {
+            $rootdir = PathHelper::getAppRootDir(getcwd(), $themesite);
+        }
+        else {
+            if (substr($rootdir, 0, 1) == '~') {
+                $rootdir = getenv("HOME") . substr($rootdir, 1);
+            }
+        }
+
+        // todo $this->validateRootdir($rootdir);
+        $this->rootdir = $rootdir;
+    }
+
+    protected function preparePiecrust()
+    {
+        $args = array(
+            'root' => $this->getRootdir()
+        );
+
+    }
+
+    protected function registerOption($opt) {
+        $mapping = [null,
+            GetOpt::NO_ARGUMENT,
+            GetOpt::REQUIRED_ARGUMENT,
+            GetOpt::OPTIONAL_ARGUMENT
+        ];
+        $option = new Option($opt['short'],$opt['long'],$mapping[$opt['type']]);
+        $this->getopt->addOption($option);
     }
 
     /**
      * Runs piecrust given some command-line arguments.
      */
-    public function run($userArgc = null, $userArgv = null)
+    public function setupX()
     {
-        // Get the arguments.
-        if ($userArgc == null || $userArgv == null) {
-            $getopt = new \Console_Getopt();
-            $userArgv = $getopt->readPHPArgv();
-            // `readPHPArgv` returns a `PEAR_Error` (or something like it) if
-            // it can't figure out the CLI arguments.
-            if (!is_array($userArgv)) {
-                throw new PieCrustException($userArgv->getMessage());
-            }
-            $userArgc = count($userArgv);
+        foreach($this->getOptions() as $opt) {
+            $this->registerOption($opt);
         }
+        $this->registerCommand('PieCrust\\Command\\Bake');
+
+/*
+        $this->getopt->process($arguments);
+*/
+        return;
 
         // Find if whether the `--root` or `--config` parameters were given.
         $rootDir = null;
@@ -48,9 +185,7 @@ class Command
 
             if (substr($arg, 0, strlen('--root=')) == '--root=') {
                 $rootDir = substr($arg, strlen('--root='));
-                if (substr($rootDir, 0, 1) == '~') {
-                    $rootDir = getenv("HOME") . substr($rootDir, 1);
-                }
+
             }
             elseif ($arg == '--root') {
                 $rootDir = $userArgv[$i + 1];
@@ -74,7 +209,7 @@ class Command
         }
         if ($rootDir == null) {
             // No root given. Find it ourselves.
-            $rootDir = PathHelper::getAppRootDir(getcwd(), $isThemeSite);
+
         }
         else {
             // The root was given.
@@ -183,52 +318,28 @@ class Command
         }
     }
 
-    protected function addCommonOptionsAndArguments(\Console_CommandLine $parser)
+    protected function getOptions()
     {
-        $parser->addOption('root', array(
-            'long_name'   => '--root',
-            'description' => "The root directory of the website (defaults to the first parent of the current directory that contains a '_content' directory).",
-            'default'     => null,
-            'help_name'   => 'ROOT_DIR'
-        ));
-        $parser->addOption('config_variant', array(
-            'long_name'   => '--config',
-            'description' => "The configuration variant to use for this command.",
-            'default'     => null,
-            'help_name'   => 'VARIANT'
-        ));
-        $parser->addOption('theme_site', array(
-            'long_name'   => '--theme',
-            'description' => "Treat a theme like a website.",
-            'default'     => false,
-            'action'      => 'StoreTrue'
-        ));
-        $parser->addOption('debug', array(
-            'long_name'   => '--debug',
-            'description' => "Show debug information.",
-            'default'     => false,
-            'help_name'   => 'DEBUG',
-            'action'      => 'StoreTrue'
-        ));
-        $parser->addOption('no_cache', array(
-            'long_name'   => '--no-cache',
-            'description' => "When applicable, disable caching.",
-            'default'     => false,
-            'action'      => 'StoreTrue'
-        ));
-        $parser->addOption('quiet', array(
-            'long_name'   => '--quiet',
-            'description' => "Print only important information.",
-            'default'     => false,
-            'help_name'   => 'QUIET',
-            'action'      => 'StoreTrue'
-        ));
-        $parser->addOption('log', array(
-            'long_name'   => '--log',
-            'description' => "Send log messages to the specified file.",
-            'default'     => null,
-            'help_name'   => 'LOG_FILE'
-        ));
+        return array(
+            array('long' => 'root',
+                  'description' => "The root directory of the website (defaults to the first parent of the current directory that contains a '_content' directory).",
+                  'type' => CommandInfo::REQUIRED_ARGUMENT),
+            array('long' => 'config',
+                  'description' => "The configuration variant to use for this command.",
+                  'type' => CommandInfo::REQUIRED_ARGUMENT),
+            array('long' => 'theme',
+                  'description' => "Treat a theme like a website.",
+                  'type' => CommandInfo::NO_ARGUMENT),
+            array('long' => 'debug',
+                  'description' => "Show debug information.",
+                  'type' => CommandInfo::NO_ARGUMENT),
+            array('long' => 'no-cache',
+                  'description' => "When applicable, disable caching.",
+                  'type' => CommandInfo::NO_ARGUMENT),
+            array('long' => 'quiet',
+                  'description' => "Print only important information.",
+                  'type' => CommandInfo::NO_ARGUMENT)
+        );
     }
 }
 
