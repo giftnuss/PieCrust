@@ -2,153 +2,54 @@
 
 namespace PieCrust\Command;
 
-use \Exception;
-use GetOpt\GetOpt;
-use GetOpt\Option;
-use PieCrust\PieCrust;
-use PieCrust\PieCrustDefaults;
-use PieCrust\PieCrustException;
-use PieCrust\Plugins\PluginLoader;
-use PieCrust\Util\PathHelper;
-
-
 /**
  * The piecrust command line application.
  */
-class Command
+class Application
 {
     /**
-     * The rootdir
+     * The command
      */
-    protected $rootdir;
-
-    /**
-     * The piecrust object
-     */
-    protected $piecrust;
-
-    /**
-     * The registered commands
-     */
-    protected $commands;
-
-    /**
-     * The command context
-     */
-    protected $context;
+    protected $command;
 
     /**
      * Builds a new instance of piecrust command.
      */
     public function __construct()
     {
-        $this->commands = [];
-        $this->context = new Context();
-        $this->getopt = new GetOpt();
+        $this->command = new Command;
     }
 
-    public function registerCommand($namespace)
+    /**
+     * Prepare default options and commands.
+     */
+    public function setup()
     {
-        $info = $this->fabricateObject($namespace,'Info');
-        $name = $info->getName();
-        if(empty($this->commands[$name])) {
-            $this->commands[$name] = $namespace;
-
-            $cmd = new \GetOpt\Command($name, function () {
-                echo "ggggg";
-            });
-            $this->getopt->addCommand($cmd);
+        foreach($this->getOptions() as $opt) {
+            $this->registerOption($opt);
         }
-        else {
-            throw new CommandException("Command $name is already registered.");
-        }
+        $this->registerCommand('PieCrust\\Command\\Bake');
+        $this->registerCommand('PieCrust\\Command\\Prepare');
     }
 
     public function registerOption($opt)
     {
-        $mapping = [null,
-            GetOpt::NO_ARGUMENT,
-            GetOpt::REQUIRED_ARGUMENT,
-            GetOpt::OPTIONAL_ARGUMENT
-        ];
-        $option = new Option($opt['short'],$opt['long'],$mapping[$opt['type']]);
-        $this->getopt->addOption($option);
+        $this->command->registerOption($opt);
     }
 
-    public function run ($args) {
-        $this->getopt->process($args);
-
-        $command = $this->getopt->getCommand();
-        if (!$command) {
-            // no command given - show help?
-        } else {
-            $this->prepareRootdir();
-            $this->preparePiecrust();
-            $this->prepareContext($command);
-            // do something with the command - example:
-            $handler = $command->getHandler();
-            $handler();
-        }
-    }
-
-    protected function fabricateObject($namespace,$name)
+    public function registerCommand($namespace)
     {
-        $class = $namespace . "\\$name";
-        if(class_exists($class)) {
-            return new $class();
-        }
-        throw new CommandException("No $name class defined in command namespace $namespace.");
+        $this->command->registerCommand($namespace);
     }
 
-    protected function prepareContext($command)
+    public function run ($args)
     {
-        $commandname = $command->getName();
-        $namespace = $this->commands[$commandname];
-        $this->context->setCommandname($commandname);
-        $this->context->setNamespace($namespace);
-
-        $info = $this->fabricateObject($namespace,'Info');
-        $options = array_merge($this->getOptions(),$info->getOptions());
-        foreach($options as $opt) {
-            $this->context->setOption($opt['long'], $this->getopt->getOption($opt['long']));
-        }
-        $this->context->setApp($this->piecrust);
+        $this->command->run($args);
     }
 
-    protected function getOptionObject()
-    {
-        return $this->getopt;
-    }
 
-    protected function getRootdir()
-    {
-        return $this->rootdir;
-    }
 
-    protected function prepareRootdir()
-    {
-        $rootdir = $this->getopt->getOption('root');
-        $themesite = $this->getopt->getOption('theme');
-        if($rootdir === null) {
-            $rootdir = PathHelper::getAppRootDir(getcwd(), $themesite);
-        }
-        else {
-            if (substr($rootdir, 0, 1) == '~') {
-                $rootdir = getenv("HOME") . substr($rootdir, 1);
-            }
-        }
 
-        // todo $this->validateRootdir($rootdir);
-        $this->rootdir = $rootdir;
-    }
-
-    protected function preparePiecrust()
-    {
-        $args = array(
-            'root' => $this->getRootdir()
-        );
-
-    }
 
     /**
      * Runs piecrust given some command-line arguments.

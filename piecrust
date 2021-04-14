@@ -177,7 +177,7 @@ function piecrust_command($userArgv = null, $profile = 'piecrust')
 {
     piecrust_setup($profile);
 
-    $chef = new PieCrust\Command\Command();
+    $chef = new PieCrust\Command\Application();
     $chef->setup();
     return $chef->run($userArgv);
 }
